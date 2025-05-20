@@ -113,6 +113,8 @@ crate::impl_knows_friendly_type_name! { VoterSelectionsPlaintextInfo }
 
 crate::impl_MayBeResource_for_non_Resource! { VoterSelectionsPlaintextInfo }
 
+impl SerializableCanonical for VoterSelectionsPlaintextInfo {}
+
 crate::impl_validatable_validated! {
     src: VoterSelectionsPlaintextInfo, produce_resource => EgResult<VoterSelectionsPlaintext> {
         let election_h_e = produce_resource.extended_base_hash().await?.h_e().clone();
@@ -422,3 +424,78 @@ impl serde::Serialize for VSPContestSerializedContest<'_> {
 }
 
 impl SerializableCanonical for VoterSelectionsPlaintext {}
+
+//=================================================================================================|
+
+#[cfg(test)]
+#[allow(clippy::unwrap_used)]
+mod t {
+    use insta::assert_snapshot;
+
+    use crate::{eg::Eg, resource::ProduceResourceExt, serializable::SerializablePretty};
+
+    use super::*;
+
+    #[test_log::test]
+    pub fn t1() {
+        async_global_executor::block_on(async {
+            let eg = Eg::new_with_test_data_generation_and_insecure_deterministic_csprng_seed(
+                "eg::voter_selections_plaintext::t::t1",
+            );
+
+            let h_e = eg.h_e().await.unwrap();
+
+            let ballot_style_ix = BallotStyleIndex::one();
+
+            // Voting Ballot style 1 has 1 contest: 1
+            let contests_option_fields_plaintexts: BTreeMap<
+                ContestIndex,
+                ContestOptionFieldsPlaintexts,
+            > = BTreeMap::from([(
+                1.try_into().unwrap(),
+                ContestOptionFieldsPlaintexts::try_new_from([0_u8, 1]).unwrap(),
+            )]);
+
+            let voter_selections_plaintext_info = VoterSelectionsPlaintextInfo {
+                h_e: h_e.clone(),
+                ballot_style_ix,
+                contests_option_fields_plaintexts,
+            };
+
+            assert_snapshot!(voter_selections_plaintext_info.to_json_pretty(), @r#"
+            {
+              "h_e": "B75F27961C715BA34511054540106C41BACAB66771C499E71DC8DFFF94CB0FE1",
+              "ballot_style_ix": 1,
+              "contests_option_fields_plaintexts": {
+                "1": [
+                  0,
+                  1
+                ]
+              }
+            }
+            "#);
+
+            let voter_selections_plaintext = VoterSelectionsPlaintext::try_validate_from(
+                voter_selections_plaintext_info,
+                eg.as_ref(),
+            )
+            .unwrap();
+
+            assert_snapshot!(voter_selections_plaintext.to_json_pretty(), @r#"
+            {
+              "h_e": "B75F27961C715BA34511054540106C41BACAB66771C499E71DC8DFFF94CB0FE1",
+              "ballot_style": 1,
+              "contests": [
+                {
+                  "contest": 1,
+                  "selections": [
+                    0,
+                    1
+                  ]
+                }
+              ]
+            }
+            "#);
+        });
+    }
+}

@@ -168,7 +168,7 @@ static LAST_NAMES: LazyLock<Box<[&str]>> = LazyLock::new(|| {
 
 //=================================================================================================|
 
-pub struct Personae(Hash<Consuming>);
+pub struct Personae(u64);
 
 impl Personae {
     pub const CNT_PERSONAE_L2: u16 = FIRST_NAMES_CNT_L2 as u16 + LAST_NAMES_CNT_L2 as u16;
@@ -177,12 +177,10 @@ impl Personae {
     pub const IX_RANGEINCLUSIVE: std::ops::RangeInclusive<PersonaIx> = 0..=Self::IX_LAST;
 
     pub const fn from_seed_u64(seed: u64) -> Personae {
-        const H: Hash<Ready> = Hash::<Ready>::DEFAULT.consume_bytes(b"Personae").close();
-        let h = H
-            .consume_bytes(&seed.to_le_bytes())
-            .close()
-            .consume_bytes(b"");
-        Self(h)
+        //const H: Hasher<Ready> = Hasher::<Ready>::DEFAULT.consume(b"Personae").close();
+        //let h = H.consume(&seed.to_le_bytes()).close().into_consuming()
+        //Self(h)
+        Self(seed)
     }
 
     pub const fn get<'a>(&'a self, ix: PersonaIx) -> Option<Persona<'a>> {

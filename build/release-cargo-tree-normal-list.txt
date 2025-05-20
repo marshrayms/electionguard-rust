@@ -1,4 +1,4 @@
-cargo tree --offline --no-default-features --features  eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-forbid-reduced-params,eg-allow-unsafe-code -e normal -f "{p} {f}" --prefix none --no-dedupe | sort --unique
+cargo tree --offline --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params,num-bigint,crypto-bigint -e normal -f "{p} {f}" --prefix none --no-dedupe | sort --unique
 
 
 allocator-api2 v0.2.21 alloc
@@ -23,23 +23,26 @@ async-task v4.7.1 default,std
 async-trait v0.1.88 (proc-macro)
 atomic-waker v1.1.2
 base16ct v0.2.0 alloc
-bitflags v2.9.0 std
+bitflags v2.9.1 std
 block-buffer v0.10.4
 blocking v1.6.1
 bon-macros v2.3.0 (proc-macro)
 bon v2.3.0 alloc,default,std
+bytemuck_derive v1.9.3 (proc-macro)
+bytemuck v1.23.0 bytemuck_derive,derive,min_const_generics
 byteorder v1.5.0
 cfg-if v1.0.0
-clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage
+clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage
 clap_derive v4.5.32 (proc-macro) default
 clap_lex v0.7.4
-clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage
+clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage
 colorchoice v1.0.3
 concurrent-queue v2.5.0 default,std
 const-default v1.0.0 default,enable-atomics
 convert_case v0.6.0
 cpufeatures v0.2.17
 crossbeam-utils v0.8.21 default,std
+crypto-bigint v0.6.1 serde,zeroize
 crypto-common v0.1.6 rand_core,std
 darling_core v0.20.11 strsim,suggestions
 darling_macro v0.20.11 (proc-macro)
@@ -61,6 +64,7 @@ event-listener v2.5.3
 event-listener v5.4.0 default,parking,std
 faster-hex v0.10.0 alloc,default,serde,std
 fastrand v2.3.0 alloc,default,std
+fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint
 fnv v1.0.7 default,std
 fnv v1.0.7 std
 futures-channel v0.3.31 alloc,futures-sink,sink,std
@@ -74,8 +78,8 @@ futures-task v0.3.31 alloc,std
 futures-util v0.3.31 alloc,async-await,async-await-macro,channel,futures-channel,futures-io,futures-macro,futures-sink,io,memchr,sink,slab,std
 futures v0.3.31 alloc,async-await,default,executor,futures-executor,std
 generic-array v0.14.7 more_lengths
-generic-array v1.2.0 const-default
-getrandom v0.3.2
+generic-array v1.2.0 const-default,zeroize
+getrandom v0.3.3
 hash32 v0.3.1
 hashbrown v0.14.5 raw
 hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde
@@ -83,7 +87,7 @@ heapless v0.8.0
 heck v0.5.0
 hex-literal v1.0.0
 hmac v0.12.1 reset,std
-hybrid-array v0.3.1 zeroize
+hybrid-array v0.3.1 bytemuck,zeroize
 ident_case v1.0.1
 indexmap v2.9.0 default,std
 indoc v2.0.6 (proc-macro)
@@ -97,7 +101,7 @@ kinded v0.3.0
 kv-log-macro v1.0.7
 lazy_static v1.5.0
 libc v0.2.172 default,std
-libm v0.2.14 arch,default
+libm v0.2.15 arch,default
 linux-raw-sys v0.4.15 elf,errno,general,if_ether,ioctl,net,netlink,no_std,prctl,xdp
 lock_api v0.4.12 atomic_usize,default
 log v0.4.27 kv,kv_unstable,value-bag
@@ -112,6 +116,7 @@ once_cell v1.21.3 alloc,default,race,std
 overload v0.1.1
 parking_lot_core v0.9.10
 parking v2.2.1
+paste v1.0.15 (proc-macro)
 pin-project-internal v1.1.10 (proc-macro)
 pin-project-lite v0.2.16
 pin-project v1.1.10
@@ -120,16 +125,18 @@ piper v0.2.4 default,futures-io,std
 polling v3.7.4
 proc-macro2 v1.0.95 default,proc-macro
 quote v1.0.40 default,proc-macro
-ractor v0.15.5 async-std,async-trait
+ractor v0.15.6 async-std,async-trait
 rand_core v0.6.4
 rand_core v0.9.3 std
 rand_distr v0.5.1 std_math
 rand v0.9.1 alloc
 rand_xorshift v0.4.0
+rand_xoshiro v0.7.0
 rustix v0.38.44 alloc,event,fs,libc-extra-traits,net,pipe,process,std,time
 rustversion v1.0.20 (proc-macro)
 ryu v1.0.20
 scopeguard v1.2.0
+serdect v0.3.0
 serde_derive v1.0.219 (proc-macro) default
 serde_json v1.0.140 default,indexmap,preserve_order,std
 serde_tokenstream v0.2.2
@@ -159,7 +166,7 @@ textwrap v0.16.2 unicode-width
 thiserror-impl v2.0.12 (proc-macro)
 thiserror v2.0.12 default,std
 thread_local v1.1.8
-tokio v1.44.2 default,sync
+tokio v1.45.0 default,sync
 tracing-attributes v0.1.28 (proc-macro)
 tracing-core v0.1.33 once_cell,std
 tracing-futures v0.2.5 pin-project,std,std-future

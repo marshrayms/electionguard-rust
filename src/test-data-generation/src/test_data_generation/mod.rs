@@ -23,14 +23,14 @@
 #![allow(non_upper_case_globals)] //? TODO: Remove temp development code
 #![allow(noop_method_call)] //? TODO: Remove temp development code
 
-mod persona;
-pub use persona::*;
+mod personae;
+pub use personae::*;
 
 pub mod council;
 pub use council::*;
 
-pub mod hash_lcg;
-pub use hash_lcg::*;
+pub mod shuffle;
+pub use shuffle::*;
 
 //=================================================================================================|
 

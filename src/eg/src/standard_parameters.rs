@@ -47,6 +47,14 @@ use crate::{
 
 //=================================================================================================|
 
+fn hex_to_biguint_unwrap(s: &'static str) -> BigUint {
+    // Unwrap() is justified here because we are using it just with compile-time constants.
+    #[allow(clippy::unwrap_used)]
+    hex_to_biguint(s).unwrap()
+}
+
+//-------------------------------------------------------------------------------------------------|
+
 #[macro_export]
 macro_rules! cfg_parameter {
     ( q_bits_total         ) => { cfg_parameter2!( @all [ p1  ] ) };
@@ -175,11 +183,11 @@ macro_rules! cfg_parameter2 {
             256, BigUint,                                                   // p bits and type
             64, None, 64,                                                   // p msb fixed 1's, middle bits src, lsb fixed 1's
             0x_FFFFFFFF_FFFFFFC5_u64,                                       // q
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 FFFFFFFF FFFFFFFF 93C467E3 7DB1212B 89995855 493FF059 FFFFFFFF FFFFFFFF "), // p
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 3B543166 9E3E4893 DF745C67 CDCFD95C CDDA2248 78A3CD5D 3226F75C C5A95638 "), // g
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 00000000 00000001 00000000 0000003A 93C467E3 7DB12EAB 97DD49C3 4115B1E6 "), // r
         ) $pn )
     };
@@ -192,9 +200,9 @@ macro_rules! cfg_parameter2 {
             256,  BigUint,                                                  // q bits and type
             3072, BigUint,                                                  // p bits and type
             256, None, 256,                                                 // p msb fixed 1's, middle bits src, lsb fixed 1's
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFF43 "), // q
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
 B17217F7 D1CF79AB C9E3B398 03F2F6AF 40F34326 7298B62D 8A0D175B 8BAAFA2B
 E7B87620 6DEBAC98 559552FB 4AFA1B10 ED2EAE35 C1382144 27573B29 1169B825
@@ -207,7 +215,7 @@ E7B87620 6DEBAC98 559552FB 4AFA1B10 ED2EAE35 C1382144 27573B29 1169B825
 4D162DB3 B365853D 7598A195 1AE273EE 5570B6C6 8F969834 96D4E6D3 30D6E582
 CAB40D66 550984EF 0C42A457 4280B378 45189610 AE3E4BB2 2590A08F 6AD27BFB
 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF "), // p
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 4A1523CB 0111B381 04EBCDE5 163F581E EEDD9163 7AC57544 C1D22832 34272732
 FF0CD85F 38539544 3F573701 32A237FF 38702AB0 37F35E7C 7003669D 83697BA1
 3BED69B6 3C88BD61 0D33C6A8 9E4882EE 6F849F05 06A4A8F0 B169E5CA 000A21DC
@@ -220,7 +228,7 @@ EF90C2CE 50761754 D778BC9A BFD84809 5C4A0ED0 FA7B7AE5 2CDA4BD6 E2CB16F3
 37AC6DBA 1A1EBA55 C378BC06 95B9D93A A59903EB A1CE5288 6A0BAAFB 15354863
 1BCEAC52 07B97205 BE8FDF83 0F27348C 7AE852F9 F8876887 D23B8054 A077DC8A
 EC0BF615 A1FA74BC 727014CF AC40E20E A194489F 63A6C224 27CB999C 9D04AA61 "), // g
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 01
 00000000 00000000 00000000 00000000 00000000 00000000 00000000 000000BC
 B17217F7 D1CF79AB C9E3B398 03F2F6AF 40F34326 7298B62D 8A0D175B 8BAB857A
@@ -252,9 +260,9 @@ macro_rules! cfg_parameter2 {
             256,  BigUint,                                                  // q bits and type
             4096, BigUint,                                                  // p bits and type
             256, Some(NumsNumber::ln_2), 256,                               // p msb fixed 1's, middle bits src, lsb fixed 1's
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFF43 "), // q
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
 B17217F7 D1CF79AB C9E3B398 03F2F6AF 40F34326 7298B62D 8A0D175B 8BAAFA2B
 E7B87620 6DEBAC98 559552FB 4AFA1B10 ED2EAE35 C1382144 27573B29 1169B825
@@ -271,7 +279,7 @@ E7B87620 6DEBAC98 559552FB 4AFA1B10 ED2EAE35 C1382144 27573B29 1169B825
 57339BA2 BEBA7D05 2AC5B61C C4E9207C EF2F0CE2 D7373958 D7622658 90445744
 FB5F2DA4 B7510058 92D35689 0DEFE9CA D9B9D4B7 13E06162 A2D8FDD0 DF2FD608
 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF "), // p
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 36036FED 214F3B50 DC566D3A 312FE413 1FEE1C2B CE6D02EA 39B477AC 05F7F885
 F38CFE77 A7E45ACF 4029114C 4D7A9BFE 058BF2F9 95D2479D 3DDA618F FD910D3C
 4236AB2C FDD783A5 016F7465 CF59BBF4 5D24A22F 130F2D04 FE93B2D5 8BB9C1D1
@@ -288,7 +296,7 @@ D27FC9A1 7D2AF49A 779F3FFB DCA22900 C14202EE 6C996160 34BE35CB CDD3E7BB
 92962C5E C6925348 DB54D128 FD99C14B 457F883E C20112A7 5A6A0581 D3D80A3B
 4EF09EC8 6F9552FF DA1653F1 33AA2534 983A6F31 B0EE4697 935A6B1E A2F75B85
 E7EBA151 BA486094 D68722B0 54633FEC 51CA3F29 B31E77E3 17B178B6 B9D8AE0F "), // g
-            hex_to_biguint("
+            hex_to_biguint_unwrap("
 01
 00000000 00000000 00000000 00000000 00000000 00000000 00000000 000000BC
 B17217F7 D1CF79AB C9E3B398 03F2F6AF 40F34326 7298B62D 8A0D175B 8BAB857A

@@ -51,7 +51,7 @@ use std::{
 //use tracing::{debug, error, field::display as trace_display, info, info_span, instrument, trace, trace_span, warn};
 //use zeroize::{Zeroize, ZeroizeOnDrop};
 
-use crate::test_data_generation::persona::*;
+use crate::test_data_generation::personae::*;
 use crate::*;
 
 //=================================================================================================|

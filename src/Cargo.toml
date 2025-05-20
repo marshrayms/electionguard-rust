@@ -5,6 +5,7 @@ members = [
   "demo-eg",
   "eg",
   "eg-resourceproducer-filesystem",
+  "fixed-width-nonnegative",
   "test-electionguard",
   "electionguard",
   # "preencrypted",
@@ -13,9 +14,9 @@ members = [
   "test-data-generation",
 ]
 
-[workspace.dependencies]
+[workspace.dependencies] #============================================================= dependencies
 
-#--- Defined in this workspace
+#--------------- Defined in this workspace
 
 eg = { path = "./eg", default-features = false }
 eg-resourceproducer-filesystem = { path = "./eg-resourceproducer-filesystem", default-features = false }
@@ -23,8 +24,9 @@ eg-resourceproducer-filesystem = { path = "./eg-resourceproducer-filesystem", de
 # preencrypted = { path = "./preencrypted", default-features = false }
 test-data-generation = { path = "./test-data-generation", default-features = false }
 util = { path = "./util", default-features = false }
+fixed-width-nonnegative = { path = "./fixed-width-nonnegative", default-features = false }
 
-#--- From crates.io
+#--------------- From crates.io
 
 allocator-api2 = { version = "0.2.21", default-features = false, features = ["alloc"] }
 anyhow = "1.0.98"
@@ -32,15 +34,18 @@ arbitrary = { version = "1.4.1", features = ["derive"] }
 derive_arbitrary  = "1.4.1"
 base16ct = { version = "0.2.0", default-features = false, features = [] }
 #bimap = "0.6.3"
-bitflags = { version = "2.9.0", features = ["std"] }
+bitflags = { version = "2.9.1", features = ["std"] }
 #bumpalo = { version = "3.17.0", default-features = false, features = ["allocator-api2", "boxed", "collections"] }
-clap = { version = "4.5.37", features = ["derive", "env"] }
+bytemuck = { version = "1", default-features = false, features = ["derive", "min_const_generics"] }
+clap = { version = "4.5.38", features = ["derive", "env"] }
 cfg-if = "1.0.0"
+cfg_aliases = { version = "0.2.1", default-features = false, features = [ ] }
 downcast-rs = "2.0.1"
 derive_more = { version = "2.0.1", default-features = false }
 either = { version = "1.15.0", features = ["serde"] }
 equivalent  = "1.0.2"
 faster-hex = { version = "0.10.0" }
+fixedbitset = { version = "0.5.7", default-features = false }
 fnv = { version = "1.0.7", default-features = false, features = ["std"] }
 hashbrown = { version = "0.15.2", default-features = false, features = [
     "allocator-api2",
@@ -70,7 +75,7 @@ thiserror = "2.0.12"
 
 tempfile = { version = "3.17.1", default-features = false, features = [] }
 
-#--- Futures
+#--------------- Futures
 
 futures-lite = { version = "2.6.0", features = [
     # Feature "default" gets dragged in by async-executor and lots of stuff
@@ -106,7 +111,7 @@ async-lock = "3.4.0"
 
 async-trait = { version = "0.1.88", default-features = false, features = [] }
 
-#--- Num-*, typenum, generic-array, hybrid-array
+#--------------- Num-*, typenum, generic-array, hybrid-array
 
 const-default = "1.0.0"
 generic-array = { version = "1.2.0", default-features = false, features = [
@@ -116,7 +121,7 @@ generic-array = { version = "1.2.0", default-features = false, features = [
     # "faster-hex",
     # "serde",
     # "typenum",
-    # "zeroize",
+    "zeroize",
 ] }
 
 # https://github.com/RustCrypto/hybrid-array/releases/tag/v0.3.1
@@ -124,7 +129,7 @@ generic-array = { version = "1.2.0", default-features = false, features = [
 # https://github.com/RustCrypto/hybrid-array/blob/v0.3.1/Cargo.toml
 hybrid-array = { version = "0.3.1", default-features = false, features = [
     # "extra-sizes",
-    # "bytemuck",
+    "bytemuck",
     # "serde",
     # "subtle",
     "zeroize",
@@ -132,35 +137,67 @@ hybrid-array = { version = "0.3.1", default-features = false, features = [
 
 num-bigint = { version = "0.4.6", features = ["serde"] }
 num-integer = "0.1.46"
-num-traits = { version = "0.2.19", features = ["libm"] }
+num-traits = { version = "0.2.19", features = ["libm", "i128"] }
+num-derive = { version = "0.4.2", default-features = false, features = [] }
 
 typenum = { version = "1.18.0", default-features = false, features = ["const-generics"] }
 
-#--- Ractor
+#--------------- proc_macro2, quote, syn, paste
 
-ractor = { version = "0.15", default-features = false, features = [
+paste = { version = "1.0.15", default-features = false, features = [] }
+prettyplease = { version = "0.2.16", default-features = false, features = [] }
+proc-macro2 = { version = "1.0.94", features = ["proc-macro"] }
+quote = { version = "1.0.40", features = ["proc-macro"] }
+syn = { version = "2.0.100", features = [
+    "full",  # dependency of prettyplease
+    "default", # "derive", "parsing", "printing", "clone-impls", "proc-macro"
+    # "full",
+    # "visit",
+    # "visit",-mut
+    # "fold",
+    # "extra-traits",
+    # "test",
+] }
+
+#--------------- Ractor
+
+ractor = { version = "0.15.6", default-features = false, features = [
     "async-std",
     "async-trait",
     ] }
 
-#--- Rand
+#--------------- Rand
 
-getrandom = { version = "0.3.2", default-features = false }
+getrandom = { version = "0.3.3", default-features = false }
 rand = { version = "0.9.1", default-features = false, features = [
     "alloc",
 ] }
 rand_core = { version = "0.9.3", default-features = false, features = ["std"] }
 rand_distr  = { version = "0.5.1", default-features = false, features = ["std_math"] } # https://github.com/rust-random/rand_distr/blob/master/Cargo.toml
 rand_xorshift = { version = "0.4.0", default-features = false }
+rand_xoshiro = { version = "0.7.0", default-features = false }
 rustc-stable-hash = "0.1.1"
 # zerocopy = "0.8.21"  # from rand 0.9
 # zerocopy-derive = "0.8.21"  # from zerocopy 0.8.20
 
-#--- RustCrypto
+#--------------- RustCrypto
 
 # https://crates.io/crates/block-buffer/0.10.4
 # https://github.com/RustCrypto/utils/blob/block-buffer-v0.10.4/block-buffer/Cargo.toml
 block-buffer = { version = "0.10.4", default-features = false, features = [] }
+
+crypto-bigint = { version = "0.6.1", default-features = false, features = [
+  # "default", # ["rand"]
+  # "alloc",
+  # "rand",
+  "serde",
+  # "extra-sizes",
+  # "der",
+  # "generic",
+  # "rand_core",
+  # "rlp",
+  "zeroize",
+] }
 
 # https://crates.io/crates/crypto-common/0.1.6
 # https://github.com/RustCrypto/traits/blob/crypto-common-v0.1.6/crypto-common/Cargo.toml
@@ -215,7 +252,7 @@ zeroize = { version = "1.8.1", default-features = false, features = [
     "simd",
 ] }
 
-#--- Serde
+#--------------- Serde
 
 erased-serde = { version = "0.4.6" }
 serde = { version = "1.0.219", features = ["derive", "rc", "std"] }
@@ -223,7 +260,7 @@ serde_json = { version = "1.0.140", features = ["preserve_order", "std"] }
 serde_tokenstream = "0.2.2"
 serde_with = { version = "3.12.0", features = ["alloc", "macros"] } #default-features = false,
 
-#--- Tracing
+#--------------- Tracing
 
 tracing = { version = "0.1.41", default-features = false, features = [
     "std",
@@ -248,7 +285,7 @@ test-log = { version = "0.2.17", default-features = false, features = [
     "trace",
 ]}
 
-#--- Unicode, ICU
+#--------------- Unicode, ICU
 
 unicode-ident = "1.0.18"
 unicode-properties = { version = "0.1.3", default-features = false, features = ["general-category"] }
@@ -256,3 +293,13 @@ unicode-normalization = { version = "0.1.24", default-features = false, features
 
 icu_collator = { version = "1.5.0", default-features = false, features = ["compiled_data"] }
 icu_locid = { version = "1.5.0", default-features = false, features = [] }
+
+#--------------- hacl from the HACL* project
+
+[workspace.dependencies.hacl]
+git = "https://github.com/hacl-star/hacl-star.git"
+# path = "dist/rs"
+# branch = "afromher_rs"
+rev = "0024e8af07895a14947c2ee2256ff56b15379200" # Latest as of 2025-05-19
+default-features = false
+features = []

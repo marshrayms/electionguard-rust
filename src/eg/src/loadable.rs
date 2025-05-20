@@ -21,6 +21,7 @@ use std::io::Cursor;
 use std::{borrow::Cow, ops::Deref};
 
 use anyhow::Context;
+use tracing::debug;
 
 use crate::{
     eg::Eg,
@@ -121,7 +122,10 @@ where
     /// It can be either the canonical or pretty JSON representation.
     fn from_stdioread_validatable(stdioread: &mut dyn std::io::Read) -> EgResult<Self> {
         serde_json::from_reader(stdioread)
-            .map_err(|sje| EgLoadingError::from_serde_json_error(sje, Self::friendly_type_name()))
+            .map_err(|sje| {
+                debug!("Json_error: {sje}");
+                EgLoadingError::from_serde_json_error(sje, Self::friendly_type_name())
+            })
             .with_context(|| format!("Reading {} from stdio", Self::friendly_type_name()))
             .map_err(Into::<EgError>::into)
     }

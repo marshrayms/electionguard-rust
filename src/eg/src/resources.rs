@@ -69,8 +69,11 @@ use util::abbreviation::Abbreviation;
 //use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use crate::{
-    errors::{EgError, EgResult, ResourceProductionError},
-    resource_producer::{ResourceProductionOk, ResourceProductionResult},
+    errors::{EgError, EgResult},
+    resource_producer::{
+        ResourceProductionError, ResourceProductionError_CouldntDowncastResource,
+        ResourceProductionOk, ResourceProductionResult,
+    },
 };
 #[rustfmt::skip] //? TODO: Remove temp development code
 use crate::{
@@ -137,8 +140,8 @@ impl Resources {
     /// Returns:
     ///
     /// - `None` if the [`ResourceProductionResult`] is not in the cache.
-    /// - `Some(ResourceProductionResult)` if the [`ResourceProductionResult`] has been cached.
-    /// - `Some(Err(ResourceProductionError::ResourceCacheAlreadyMutablyInUse))` if the cache
+    /// - `Some(`[`ResourceProductionResult`]`)` if the [`ResourceProductionResult`] has been cached.
+    /// - `Some(Err(`[`ResourceProductionError::ResourceCacheAlreadyMutablyInUse`]`))` if the cache
     ///   is already mutably borrowed.
     pub async fn obtain_resource_production_result_from_cache(
         &self,
@@ -171,11 +174,11 @@ impl Resources {
     /// Returns:
     ///
     /// - `None` if the [`ResourceProductionResult`] is not in the cache.
-    /// - `Some(Result<(Arc<T>, ResourceSource))` if the [`ResourceProductionResult`] has been
-    ///   cached.
-    /// - `Some(Err(ResourceProductionError::ResourceCacheAlreadyMutablyInUse))` if the cache
+    /// - `Some(`[`Result`]`<(`[`Arc`]`<T>, `[`ResourceSource`]`))` if the
+    ///   [`ResourceProductionResult`] has been cached.
+    /// - `Some(Err(`[`ResourceProductionError::ResourceCacheAlreadyMutablyInUse`]`))` if the cache
     ///   is already mutably borrowed.
-    /// - `Some(Err(ResourceProductionError::CouldntDowncastResource))` if the dynamic downcast
+    /// - `Some(Err(`[`ResourceProductionError::CouldntDowncastResource`]`))` if the dynamic downcast
     ///   did not succeed.
     ///
     pub async fn obtain_resource_production_result_from_cache_downcast<
@@ -199,13 +202,15 @@ impl Resources {
                                 std::any::TypeId::of::<T>()
                             );
                             let src_type_expected2 = src_type_expected.clone();
-                            let e = ResourceProductionError::CouldntDowncastResource {
+                            let rpe_cdr = ResourceProductionError_CouldntDowncastResource {
                                 src_ridfmt: ridfmt.clone(),
                                 src_resource_source: resource_source,
                                 src_type: format!("{} {:?}", src_typename, arc.type_id()),
                                 opt_src_type_expected: Some(src_type_expected),
                                 target_type: src_type_expected2,
                             };
+                            let e =
+                                ResourceProductionError::CouldntDowncastResource(Box::new(rpe_cdr));
                             error!("obtain_resource_production_result_from_cache_downcast {e:?}");
                             Err(e)
                         }
@@ -219,16 +224,16 @@ impl Resources {
     /// If successful, it will attempt to downcast the result to the specified [`Resource`] type
     /// `T`.
     ///
-    /// Returns just the `Arc<dyn Resource>`, to simplify the common case where the caller isn't
+    /// Returns just the [`Arc`]`<dyn `[`Resource`]`>`, to simplify the common case where the caller isn't
     /// interested in the [`ResourceSource`].
     ///
     /// Returns:
     ///
     /// - `None` if the [`ResourceProductionResult`] is not in the cache.
-    /// - `Some(Result<Arc<T>>)` if the [`ResourceProductionResult`] has been cached.
-    /// - `Some(Err(ResourceProductionError::ResourceCacheAlreadyMutablyInUse))` if the cache
+    /// - `Some(`[`Result`]`<`[`Arc`]`<T>>)` if the [`ResourceProductionResult`] has been cached.
+    /// - `Some(Err(`[`ResourceProductionError::ResourceCacheAlreadyMutablyInUse`]`))` if the cache
     ///   is already mutably borrowed.
-    /// - `Some(Err(ResourceProductionError::CouldntDowncastResource))` if the dynamic downcast
+    /// - `Some(Err(`[`ResourceProductionError::CouldntDowncastResource`]`))` if the dynamic downcast
     ///   did not succeed.
     pub async fn obtain_resource_production_result_from_cache_downcast_no_src<
         T: Resource + Any + 'static,

@@ -531,14 +531,14 @@ impl Ballot {
         let ballot_nonce_xi_B = opt_ballot_nonce_xi_B
             .unwrap_or_else(|| BallotNonce_xi_B::generate_random(produce_resource.csrng()));
 
-        // Convert the plaintext Contest Option fields to plaintext contest data fields.
+        // For each `Contest`, convert the `ContestOptionFieldsPlaintexts` to `ContestDataFieldsPlaintexts`.
         let mut contests_data_fields_plaintexts: BTreeMap<
             ContestIndex,
             ContestDataFieldsPlaintexts,
         > = BTreeMap::new();
         for (contest_ix, contest_option_fields_plaintexts) in contests_option_fields_plaintexts {
             let specific_contest_data_fields_plaintexts =
-                ContestDataFieldsPlaintexts::try_from_option_fields(
+                ContestDataFieldsPlaintexts::try_from_option_fields_plaintexts(
                     election_manifest,
                     ballot_style,
                     contest_ix,
@@ -558,13 +558,13 @@ impl Ballot {
             let mut v = vec![0x20];
             v.extend_from_slice(id_b.as_ref());
 
-            let expected_len = 33; // EGDS 2.1.0 pg. 75 (32)
+            let expected_len = 33; // EGDS 2.1.0 sec 3.3.2 eq. 32 pg. 29, 75
             assert_eq!(v.len(), expected_len);
 
             HValue_H_I::compute_from_eg_h(&h_e, &v)
         };
 
-        // Encrypt the plaintext contest data fields to make the contest data fields ciphertexts.
+        // Encrypt the `ContestDataFieldsPlaintexts` to make the `ContestDataFieldsCiphertexts`.
         let mut contests_data_fields_ciphertexts: BTreeMap<
             ContestIndex,
             ContestDataFieldsCiphertexts,

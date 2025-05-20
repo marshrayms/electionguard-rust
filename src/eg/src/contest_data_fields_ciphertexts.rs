@@ -162,7 +162,7 @@ impl ContestDataFieldsCiphertexts {
                         )
                     })?;
 
-                // Only data fields that are contest options get range proofs.
+                // Only data fields that are contest options get range proofs. //? TODO It's a little more complicated than that
                 let Some(&effective_option_selection_limit) =
                     contest_options_effective_selection_limits.get(contest_data_field_ix)
                 else {

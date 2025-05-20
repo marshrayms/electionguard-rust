@@ -45,12 +45,15 @@ use util::{abbreviation::Abbreviation, vec1::Vec1};
 
 use crate::{
     eg::Eg,
-    errors::{EgError, EgResult, ResourceProductionError},
+    errors::{EgError, EgResult},
     guardian::{GuardianIndex, GuardianKeyPartId},
     guardian_public_key::GuardianPublicKey,
     key::{AsymmetricKeyPart, KeyPurpose},
     resource_path::ResourceNamespacePath,
-    resource_producer::{ResourceProductionResult, ResourceSource},
+    resource_producer::{
+        ResourceProductionError, ResourceProductionError_CouldntDowncastResource,
+        ResourceProductionResult, ResourceSource,
+    },
     serializable::{SerializableCanonical, SerializablePretty},
     validatable::{MayBeValidatableUnsized, ValidatableUnsized, ValidatedUnsized},
 };
@@ -376,13 +379,14 @@ pub trait ProduceResourceExt: ProduceResource + Send + Sync + 'static {
                         std::any::TypeId::of::<T>()
                     );
                     let src_type_expected2 = src_type_expected.clone();
-                    let e = ResourceProductionError::CouldntDowncastResource {
+                    let rpe_cdr = ResourceProductionError_CouldntDowncastResource {
                         src_ridfmt: ridfmt.clone(),
                         src_resource_source: resource_source,
                         src_type: format!("{} {:?}", src_typename, src_typeid),
                         opt_src_type_expected: Some(src_type_expected),
                         target_type: src_type_expected2,
                     };
+                    let e = ResourceProductionError::CouldntDowncastResource(Box::new(rpe_cdr));
                     error!("resource: {e:?}");
                     Err(e)
                 }
@@ -525,11 +529,47 @@ pub trait ProduceResourceExt: ProduceResource + Send + Sync + 'static {
         Ok(arc_jpk)
     }
 
+    /// Convenience method to obtain a copy of the parameter base hash `H_P`, without its containing
+    /// [`Hashes`](crate::hashes::Hashes)
+    /// [`Election Data Object`](crate::resource::ElectionDataObjectId).
+    #[allow(async_fn_in_trait)]
+    async fn h_p(&self) -> EgResult<crate::hashes::ParameterBaseHash_H_P> {
+        self.hashes().await.map(|arc| arc.h_p.clone())
+    }
+
+    /// Convenience method to obtain a copy of the election base hash `H_B`, without its containing
+    /// [`Hashes`](crate::hashes::Hashes)
+    /// [`Election Data Object`](crate::resource::ElectionDataObjectId).
+    #[allow(async_fn_in_trait)]
+    async fn h_b(&self) -> EgResult<crate::hashes::ElectionBaseHash_H_B> {
+        self.hashes().await.map(|arc| arc.h_b.clone())
+    }
+
     helper_method_validated_edo_type!(
         extended_base_hash,
         ExtendedBaseHash,
         crate::extended_base_hash::ExtendedBaseHash
     );
+
+    /// Convenience method to obtain a copy of the extended base hash `H_E`, without its containing
+    /// [`ExtendedBaseHash`](crate::extended_base_hash::ExtendedBaseHash)
+    /// [`Election Data Object`](crate::resource::ElectionDataObjectId).
+    #[allow(async_fn_in_trait)]
+    async fn h_e(&self) -> EgResult<crate::extended_base_hash::ExtendedBaseHash_H_E> {
+        use crate::resource_id::ElectionDataObjectId as EdoId;
+
+        let ridfmt = EdoId::ExtendedBaseHash.validated_type_ridfmt();
+
+        let arc_extended_base_hash_edo = self
+            .produce_resource_downcast_no_src::<crate::extended_base_hash::ExtendedBaseHash>(
+                &ridfmt,
+            )
+            .await?;
+
+        let h_e = arc_extended_base_hash_edo.h_e();
+
+        Ok(h_e.clone())
+    }
 
     helper_method_validated_edo_type!(
         pre_voting_data,

@@ -6,7 +6,7 @@ repository = "https://github.com/microsoft/electionguard-rust"
 license = "Apache-2.0 OR MIT"
 publish = false
 
-[features]
+[features] #=============================================================================== features
 
 default = [
     "eg-forbid-insecure-deterministic-csprng",
@@ -25,28 +25,43 @@ eg-forbid-nonstandard-egds-version      = [ ]
 eg-allow-test-data-generation           = [ ]
 eg-forbid-test-data-generation          = [ ]
 
-eg-use-toy-params-q7p16                 = [ ]
-eg-use-toy-params-q16p32                = [ ]
-eg-use-toy-params-q16p48                = [ ]
-eg-use-toy-params-q24p64                = [ ]
-eg-use-toy-params-q32p96                = [ ]
-eg-use-toy-params-q32p128               = [ ]
-eg-use-toy-params-q48p192               = [ ]
-eg-use-toy-params-q64p256               = [ ]
-eg-use-reduced-params-q256p3072         = [ ]
-eg-use-standard-params-256q4096p        = [ ]
-eg-forbid-reduced-params                = [ ]
+eg-use-toy-params-q7p16                 = [ # "fixed-width-nonnegative/bits-8", # TODO temp commented out due to limitations of fixed_width_nonnegative::significant_first::ops::add_returning_carry
+                                            "fixed-width-nonnegative/bits-16" ]
+eg-use-toy-params-q16p32                = [ "fixed-width-nonnegative/bits-16",
+                                            "fixed-width-nonnegative/bits-32" ]
+eg-use-toy-params-q16p48                = [ "fixed-width-nonnegative/bits-16",
+                                            "fixed-width-nonnegative/bits-48" ]
+eg-use-toy-params-q24p64                = [ "fixed-width-nonnegative/bits-24",
+                                            "fixed-width-nonnegative/bits-64" ]
+eg-use-toy-params-q32p96                = [ "fixed-width-nonnegative/bits-32",
+                                            "fixed-width-nonnegative/bits-96" ]
+eg-use-toy-params-q32p128               = [ "fixed-width-nonnegative/bits-32",
+                                            "fixed-width-nonnegative/bits-128" ]
+eg-use-toy-params-q48p192               = [ "fixed-width-nonnegative/bits-48",
+                                            "fixed-width-nonnegative/bits-192" ]
+eg-use-toy-params-q64p256               = [ "fixed-width-nonnegative/bits-64",
+                                            "fixed-width-nonnegative/bits-256" ]
+eg-use-reduced-params-q256p3072         = [ "fixed-width-nonnegative/bits-256",
+                                            "fixed-width-nonnegative/bits-3072" ]
+eg-use-standard-params-256q4096p        = [ "fixed-width-nonnegative/bits-256",
+                                            "fixed-width-nonnegative/bits-4096" ]
+eg-forbid-reduced-params                = [ "fixed-width-nonnegative/bits-256",
+                                            "fixed-width-nonnegative/bits-4096" ]
 
 eg-allow-unsafe-code                    = [ "util/eg-allow-unsafe-code" ]
 eg-forbid-unsafe-code                   = [ "util/eg-forbid-unsafe-code" ]
 
-[dependencies]
+[dependencies] #======================================================================= dependencies
 
-#--- Defined in this workspace
+#--------------- Defined in this workspace
 
+fixed-width-nonnegative = { workspace = true, features = [
+    "montgomery",
+    "num-bigint",
+]}
 util.workspace = true
 
-#--- From crates.io
+#--------------- From crates.io
 
 anyhow.workspace = true
 bitflags.workspace = true
@@ -64,7 +79,7 @@ strum.workspace = true
 strum_macros.workspace = true
 thiserror.workspace = true
 
-#--- Futures
+#--------------- Futures
 
 async-global-executor.workspace = true
 async-lock.workspace = true
@@ -73,7 +88,7 @@ async-trait.workspace = true
 futures-lite.workspace = true
 #trait-variant.workspace = true
 
-#--- Num-*, typenum, generic-array, hybrid-array
+#--------------- Num-*, typenum, generic-array, hybrid-array
 
 # generic-array.workspace = true
 # hybrid-array.workspace = true
@@ -82,23 +97,24 @@ num-integer.workspace = true
 num-traits.workspace = true
 # typenum.workspace = true
 
-#--- Rand
+#--------------- Rand
 
 rand.workspace = true
 # rand_core.workspace = true
 # rand_distr.workspace = true
 # rand_xorshift.workspace = true
 
-#--- RustCrypto
+#--------------- RustCrypto
 
 # crypto-common.workspace = true
+# crypto-bigint.workspace = true
 digest.workspace = true
 hmac.workspace = true
 sha2.workspace = true
 # sha3.workspace = true
 zeroize.workspace = true
 
-#--- Serde
+#--------------- Serde
 
 erased-serde.workspace = true
 serde.workspace = true
@@ -106,12 +122,12 @@ serde_json.workspace = true
 serde_tokenstream.workspace = true
 serde_with.workspace = true
 
-#--- Tracing
+#--------------- Tracing
 
 tracing.workspace = true
 #valuable.workspace = true
 
-#--- Unicode, ICU
+#--------------- Unicode, ICU
 
 unicode-ident.workspace = true
 unicode-properties.workspace = true

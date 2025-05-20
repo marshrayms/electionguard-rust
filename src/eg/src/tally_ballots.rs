@@ -79,6 +79,7 @@ impl<'a> BallotTallyBuilder<'a> {
 
             if let Some(v) = self.state.get_mut(&idx) {
                 for (j, encryption) in contest.selection.iter().enumerate() {
+                    // EGDS 2.1.0 sec 3.5 eq. 79 pg. 44
                     v[j].alpha = v[j].alpha.mul(&encryption.alpha, self.group);
                     v[j].beta = v[j].beta.mul(&encryption.beta, self.group);
                 }

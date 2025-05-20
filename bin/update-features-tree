@@ -191,12 +191,17 @@ else
 fi
 printf '\nusing "time" prefix: %s\n' "$time" | cat -t | tee -a "$build_info_txt"
 
-cargo_features_flags='--no-default-features --features '
-cargo_features_flags="$cargo_features_flags eg-allow-insecure-deterministic-csprng"
+cargo_features_flags='--no-default-features --features eg-allow-insecure-deterministic-csprng'
 cargo_features_flags=$cargo_features_flags,eg-allow-nonstandard-egds-version
 cargo_features_flags=$cargo_features_flags,eg-allow-test-data-generation
-cargo_features_flags=$cargo_features_flags,eg-forbid-reduced-params
 cargo_features_flags=$cargo_features_flags,eg-allow-unsafe-code
+cargo_features_flags=$cargo_features_flags,eg-forbid-reduced-params
+
+# Choice of numerics implementation
+cargo_features_flags=$cargo_features_flags,num-bigint
+cargo_features_flags=$cargo_features_flags,crypto-bigint
+#cargo_features_flags=$cargo_features_flags,basic-array
+#cargo_features_flags=$cargo_features_flags,hacl
 
 export CARGO_TERM_COLOR=never
 export RUST_LOG=off
@@ -387,9 +392,12 @@ else
     printf '\n[SKIPPING] cargo test ... -- --ignored ...\n' "$cargo_profile_flag" "$cargo_features_flags" | cat -t | tee -a "$build_info_txt" "$f"
 fi
 
-( printf '\nOverall...\n'
-    grep -P 'passed;' "$f" | grep -vP '\s+0\s+passed;\s+0\s+failed;'
-) | cat -t | tee -a "$build_info_txt"
+{
+    printf '\nOverall...\n'
+    grep -P 'passed;' "$f" \
+    | grep -vP '\s+0\s+passed;\s+0\s+failed;' \
+    | perl -wpe 's/(?:;\s*|[.]\s+)/\n/g'
+} | cat -t | tee -a "$build_info_txt" "$f"
 
 unset -v f
 

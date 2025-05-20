@@ -1,4 +1,4 @@
-cargo tree --offline --no-default-features --features  eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-forbid-reduced-params,eg-allow-unsafe-code -e features -f "{p} {f}"
+cargo tree --offline --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params,num-bigint,crypto-bigint -e features -f "{p} {f}"
 
 demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 ├── async-executor v1.13.2 static
@@ -70,7 +70,7 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   ├── async-trait v0.1.88 (proc-macro)  (*)
 │   ├── hex-literal v1.0.0
 │   ├── util v0.1.0 (src/util) eg-allow-unsafe-code
-│   │   ├── getrandom v0.3.2
+│   │   ├── getrandom v0.3.3
 │   │   │   ├── libc v0.2.172 default,std
 │   │   │   └── cfg-if feature "default"
 │   │   │       └── cfg-if v1.0.0
@@ -145,150 +145,70 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │   ├── serde feature "rc"
 │   │   │   └── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
 │   │   ├── serde feature "std" (*)
-│   │   ├── itertools feature "default"
-│   │   │   ├── itertools v0.14.0 default,use_alloc,use_std
-│   │   │   │   └── either v1.15.0 default,serde,std,use_std (*)
-│   │   │   └── itertools feature "use_std"
-│   │   │       ├── itertools v0.14.0 default,use_alloc,use_std (*)
-│   │   │       ├── either feature "use_std"
-│   │   │       │   ├── either v1.15.0 default,serde,std,use_std (*)
-│   │   │       │   └── either feature "std" (*)
-│   │   │       └── itertools feature "use_alloc"
-│   │   │           └── itertools v0.14.0 default,use_alloc,use_std (*)
+│   │   ├── num-traits feature "default"
+│   │   │   ├── num-traits v0.2.19 default,i128,libm,std
+│   │   │   │   └── libm feature "default"
+│   │   │   │       ├── libm v0.2.15 arch,default
+│   │   │   │       └── libm feature "arch"
+│   │   │   │           └── libm v0.2.15 arch,default
+│   │   │   │   [build-dependencies]
+│   │   │   │   └── autocfg feature "default" (*)
+│   │   │   └── num-traits feature "std"
+│   │   │       └── num-traits v0.2.19 default,i128,libm,std (*)
+│   │   ├── num-traits feature "i128"
+│   │   │   └── num-traits v0.2.19 default,i128,libm,std (*)
+│   │   ├── num-traits feature "libm"
+│   │   │   └── num-traits v0.2.19 default,i128,libm,std (*)
+│   │   ├── zeroize feature "alloc"
+│   │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive
+│   │   │       ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
+│   │   │       └── zeroize_derive feature "default"
+│   │   │           └── zeroize_derive v1.4.2 (proc-macro)
+│   │   │               ├── proc-macro2 feature "default" (*)
+│   │   │               ├── quote feature "default" (*)
+│   │   │               ├── syn feature "default"
+│   │   │               │   ├── syn v2.0.101 clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit,visit-mut (*)
+│   │   │               │   ├── syn feature "clone-impls" (*)
+│   │   │               │   ├── syn feature "derive" (*)
+│   │   │               │   ├── syn feature "parsing" (*)
+│   │   │               │   ├── syn feature "printing" (*)
+│   │   │               │   └── syn feature "proc-macro" (*)
+│   │   │               ├── syn feature "extra-traits" (*)
+│   │   │               ├── syn feature "full" (*)
+│   │   │               └── syn feature "visit"
+│   │   │                   └── syn v2.0.101 clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit,visit-mut (*)
+│   │   ├── zeroize feature "derive"
+│   │   │   ├── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │   │   └── zeroize feature "zeroize_derive"
+│   │   │       └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │   ├── zeroize feature "serde"
+│   │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │   ├── zeroize feature "simd"
+│   │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │   ├── zeroize feature "std"
+│   │   │   ├── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │   │   └── zeroize feature "alloc" (*)
+│   │   ├── zeroize feature "zeroize_derive" (*)
 │   │   ├── num-bigint feature "default"
 │   │   │   ├── num-bigint v0.4.6 default,serde,std
 │   │   │   │   ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
-│   │   │   │   ├── num-integer feature "i128"
-│   │   │   │   │   └── num-integer v0.1.46 default,i128,std
-│   │   │   │   │       └── num-traits feature "i128"
-│   │   │   │   │           └── num-traits v0.2.19 default,i128,libm,std
-│   │   │   │   │               └── libm feature "default"
-│   │   │   │   │                   ├── libm v0.2.14 arch,default
-│   │   │   │   │                   └── libm feature "arch"
-│   │   │   │   │                       └── libm v0.2.14 arch,default
-│   │   │   │   │               [build-dependencies]
-│   │   │   │   │               └── autocfg feature "default" (*)
-│   │   │   │   └── num-traits feature "i128" (*)
+│   │   │   │   ├── num-traits feature "i128" (*)
+│   │   │   │   └── num-integer feature "i128"
+│   │   │   │       └── num-integer v0.1.46 default,i128,std
+│   │   │   │           └── num-traits feature "i128" (*)
 │   │   │   └── num-bigint feature "std"
 │   │   │       ├── num-bigint v0.4.6 default,serde,std (*)
-│   │   │       ├── num-integer feature "std"
-│   │   │       │   ├── num-integer v0.1.46 default,i128,std (*)
-│   │   │       │   └── num-traits feature "std"
-│   │   │       │       └── num-traits v0.2.19 default,i128,libm,std (*)
-│   │   │       └── num-traits feature "std" (*)
+│   │   │       ├── num-traits feature "std" (*)
+│   │   │       └── num-integer feature "std"
+│   │   │           ├── num-integer v0.1.46 default,i128,std (*)
+│   │   │           └── num-traits feature "std" (*)
 │   │   ├── num-bigint feature "serde"
 │   │   │   └── num-bigint v0.4.6 default,serde,std (*)
 │   │   ├── num-integer feature "default"
 │   │   │   ├── num-integer v0.1.46 default,i128,std (*)
 │   │   │   └── num-integer feature "std" (*)
-│   │   ├── num-traits feature "default"
-│   │   │   ├── num-traits v0.2.19 default,i128,libm,std (*)
-│   │   │   └── num-traits feature "std" (*)
-│   │   ├── num-traits feature "libm"
-│   │   │   └── num-traits v0.2.19 default,i128,libm,std (*)
-│   │   ├── rand feature "alloc"
-│   │   │   └── rand v0.9.1 alloc
-│   │   │       └── rand_core v0.9.3 std
-│   │   ├── rand_core feature "std"
-│   │   │   └── rand_core v0.9.3 std
-│   │   ├── serde_json feature "default"
-│   │   │   ├── serde_json v1.0.140 default,indexmap,preserve_order,std
-│   │   │   │   ├── memchr v2.7.4 alloc,default,std
-│   │   │   │   ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
-│   │   │   │   ├── indexmap feature "default"
-│   │   │   │   │   ├── indexmap v2.9.0 default,std
-│   │   │   │   │   │   ├── equivalent v1.0.2
-│   │   │   │   │   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde
-│   │   │   │   │   │       ├── equivalent v1.0.2
-│   │   │   │   │   │       ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
-│   │   │   │   │   │       └── allocator-api2 feature "alloc"
-│   │   │   │   │   │           └── allocator-api2 v0.2.21 alloc
-│   │   │   │   │   └── indexmap feature "std"
-│   │   │   │   │       └── indexmap v2.9.0 default,std (*)
-│   │   │   │   ├── itoa feature "default"
-│   │   │   │   │   └── itoa v1.0.15
-│   │   │   │   └── ryu feature "default"
-│   │   │   │       └── ryu v1.0.20
-│   │   │   └── serde_json feature "std"
-│   │   │       ├── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
-│   │   │       ├── serde feature "std" (*)
-│   │   │       └── memchr feature "std"
-│   │   │           ├── memchr v2.7.4 alloc,default,std
-│   │   │           └── memchr feature "alloc"
-│   │   │               └── memchr v2.7.4 alloc,default,std
-│   │   ├── serde_json feature "preserve_order"
-│   │   │   ├── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
-│   │   │   ├── serde_json feature "indexmap"
-│   │   │   │   └── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
-│   │   │   └── serde_json feature "std" (*)
-│   │   ├── serde_json feature "std" (*)
-│   │   ├── serde_with feature "alloc"
-│   │   │   ├── serde_with v3.12.0 alloc,default,macros,std
-│   │   │   │   ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
-│   │   │   │   ├── serde_derive feature "default" (*)
-│   │   │   │   └── serde_with_macros feature "default"
-│   │   │   │       └── serde_with_macros v3.12.0 (proc-macro)
-│   │   │   │           ├── proc-macro2 feature "default" (*)
-│   │   │   │           ├── quote feature "default" (*)
-│   │   │   │           ├── syn feature "default"
-│   │   │   │           │   ├── syn v2.0.101 clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit,visit-mut (*)
-│   │   │   │           │   ├── syn feature "clone-impls" (*)
-│   │   │   │           │   ├── syn feature "derive" (*)
-│   │   │   │           │   ├── syn feature "parsing" (*)
-│   │   │   │           │   ├── syn feature "printing" (*)
-│   │   │   │           │   └── syn feature "proc-macro" (*)
-│   │   │   │           ├── syn feature "extra-traits" (*)
-│   │   │   │           ├── syn feature "full" (*)
-│   │   │   │           ├── syn feature "parsing" (*)
-│   │   │   │           └── darling feature "default"
-│   │   │   │               ├── darling v0.20.11 default,suggestions
-│   │   │   │               │   ├── darling_core feature "default"
-│   │   │   │               │   │   └── darling_core v0.20.11 strsim,suggestions
-│   │   │   │               │   │       ├── proc-macro2 feature "default" (*)
-│   │   │   │               │   │       ├── quote feature "default" (*)
-│   │   │   │               │   │       ├── syn feature "default" (*)
-│   │   │   │               │   │       ├── syn feature "extra-traits" (*)
-│   │   │   │               │   │       ├── syn feature "full" (*)
-│   │   │   │               │   │       ├── fnv feature "default"
-│   │   │   │               │   │       │   ├── fnv v1.0.7 default,std
-│   │   │   │               │   │       │   └── fnv feature "std"
-│   │   │   │               │   │       │       └── fnv v1.0.7 default,std
-│   │   │   │               │   │       ├── ident_case feature "default"
-│   │   │   │               │   │       │   └── ident_case v1.0.1
-│   │   │   │               │   │       └── strsim feature "default"
-│   │   │   │               │   │           └── strsim v0.11.1
-│   │   │   │               │   └── darling_macro feature "default"
-│   │   │   │               │       └── darling_macro v0.20.11 (proc-macro)
-│   │   │   │               │           ├── quote feature "default" (*)
-│   │   │   │               │           ├── syn feature "default" (*)
-│   │   │   │               │           └── darling_core feature "default" (*)
-│   │   │   │               └── darling feature "suggestions"
-│   │   │   │                   ├── darling v0.20.11 default,suggestions (*)
-│   │   │   │                   └── darling_core feature "suggestions"
-│   │   │   │                       ├── darling_core v0.20.11 strsim,suggestions (*)
-│   │   │   │                       └── darling_core feature "strsim"
-│   │   │   │                           └── darling_core v0.20.11 strsim,suggestions (*)
-│   │   │   └── serde feature "alloc" (*)
-│   │   ├── serde_with feature "default"
-│   │   │   ├── serde_with v3.12.0 alloc,default,macros,std (*)
-│   │   │   ├── serde_with feature "macros"
-│   │   │   │   └── serde_with v3.12.0 alloc,default,macros,std (*)
-│   │   │   └── serde_with feature "std"
-│   │   │       ├── serde_with v3.12.0 alloc,default,macros,std (*)
-│   │   │       ├── serde feature "std" (*)
-│   │   │       └── serde_with feature "alloc" (*)
-│   │   ├── serde_with feature "macros" (*)
 │   │   ├── static_assertions feature "default"
 │   │   │   └── static_assertions v1.1.0
-│   │   ├── thiserror feature "default"
-│   │   │   ├── thiserror v2.0.12 default,std
-│   │   │   │   └── thiserror-impl feature "default"
-│   │   │   │       └── thiserror-impl v2.0.12 (proc-macro)
-│   │   │   │           ├── proc-macro2 feature "default" (*)
-│   │   │   │           ├── quote feature "default" (*)
-│   │   │   │           └── syn feature "default" (*)
-│   │   │   └── thiserror feature "std"
-│   │   │       └── thiserror v2.0.12 default,std (*)
 │   │   ├── faster-hex feature "default"
 │   │   │   ├── faster-hex v0.10.0 alloc,default,serde,std
 │   │   │   │   ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
@@ -306,6 +226,16 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │   │       ├── faster-hex v0.10.0 alloc,default,serde,std (*)
 │   │   │       ├── serde feature "std" (*)
 │   │   │       └── faster-hex feature "alloc" (*)
+│   │   ├── itertools feature "default"
+│   │   │   ├── itertools v0.14.0 default,use_alloc,use_std
+│   │   │   │   └── either v1.15.0 default,serde,std,use_std (*)
+│   │   │   └── itertools feature "use_std"
+│   │   │       ├── itertools v0.14.0 default,use_alloc,use_std (*)
+│   │   │       ├── either feature "use_std"
+│   │   │       │   ├── either v1.15.0 default,serde,std,use_std (*)
+│   │   │       │   └── either feature "std" (*)
+│   │   │       └── itertools feature "use_alloc"
+│   │   │           └── itertools v0.14.0 default,use_alloc,use_std (*)
 │   │   ├── nutype feature "new_unchecked"
 │   │   │   ├── nutype v0.6.1 new_unchecked,serde,std
 │   │   │   │   └── nutype_macros feature "default"
@@ -348,11 +278,97 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │   │   ├── nutype v0.6.1 new_unchecked,serde,std (*)
 │   │   │   └── nutype_macros feature "std"
 │   │   │       └── nutype_macros v0.6.1 (proc-macro) new_unchecked,serde,std (*)
+│   │   ├── rand feature "alloc"
+│   │   │   └── rand v0.9.1 alloc
+│   │   │       └── rand_core v0.9.3 std
+│   │   ├── rand_core feature "std"
+│   │   │   └── rand_core v0.9.3 std
 │   │   ├── rand_distr feature "std_math"
 │   │   │   ├── rand_distr v0.5.1 std_math
 │   │   │   │   ├── rand v0.9.1 alloc (*)
 │   │   │   │   └── num-traits feature "libm" (*)
 │   │   │   └── num-traits feature "std" (*)
+│   │   ├── serde_json feature "default"
+│   │   │   ├── serde_json v1.0.140 default,indexmap,preserve_order,std
+│   │   │   │   ├── memchr v2.7.4 alloc,default,std
+│   │   │   │   ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
+│   │   │   │   ├── indexmap feature "default"
+│   │   │   │   │   ├── indexmap v2.9.0 default,std
+│   │   │   │   │   │   ├── equivalent v1.0.2
+│   │   │   │   │   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde
+│   │   │   │   │   │       ├── equivalent v1.0.2
+│   │   │   │   │   │       ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
+│   │   │   │   │   │       └── allocator-api2 feature "alloc"
+│   │   │   │   │   │           └── allocator-api2 v0.2.21 alloc
+│   │   │   │   │   └── indexmap feature "std"
+│   │   │   │   │       └── indexmap v2.9.0 default,std (*)
+│   │   │   │   ├── itoa feature "default"
+│   │   │   │   │   └── itoa v1.0.15
+│   │   │   │   └── ryu feature "default"
+│   │   │   │       └── ryu v1.0.20
+│   │   │   └── serde_json feature "std"
+│   │   │       ├── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
+│   │   │       ├── serde feature "std" (*)
+│   │   │       └── memchr feature "std"
+│   │   │           ├── memchr v2.7.4 alloc,default,std
+│   │   │           └── memchr feature "alloc"
+│   │   │               └── memchr v2.7.4 alloc,default,std
+│   │   ├── serde_json feature "preserve_order"
+│   │   │   ├── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
+│   │   │   ├── serde_json feature "indexmap"
+│   │   │   │   └── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
+│   │   │   └── serde_json feature "std" (*)
+│   │   ├── serde_json feature "std" (*)
+│   │   ├── serde_with feature "alloc"
+│   │   │   ├── serde_with v3.12.0 alloc,default,macros,std
+│   │   │   │   ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
+│   │   │   │   ├── serde_derive feature "default" (*)
+│   │   │   │   └── serde_with_macros feature "default"
+│   │   │   │       └── serde_with_macros v3.12.0 (proc-macro)
+│   │   │   │           ├── proc-macro2 feature "default" (*)
+│   │   │   │           ├── quote feature "default" (*)
+│   │   │   │           ├── syn feature "default" (*)
+│   │   │   │           ├── syn feature "extra-traits" (*)
+│   │   │   │           ├── syn feature "full" (*)
+│   │   │   │           ├── syn feature "parsing" (*)
+│   │   │   │           └── darling feature "default"
+│   │   │   │               ├── darling v0.20.11 default,suggestions
+│   │   │   │               │   ├── darling_core feature "default"
+│   │   │   │               │   │   └── darling_core v0.20.11 strsim,suggestions
+│   │   │   │               │   │       ├── proc-macro2 feature "default" (*)
+│   │   │   │               │   │       ├── quote feature "default" (*)
+│   │   │   │               │   │       ├── syn feature "default" (*)
+│   │   │   │               │   │       ├── syn feature "extra-traits" (*)
+│   │   │   │               │   │       ├── syn feature "full" (*)
+│   │   │   │               │   │       ├── fnv feature "default"
+│   │   │   │               │   │       │   ├── fnv v1.0.7 default,std
+│   │   │   │               │   │       │   └── fnv feature "std"
+│   │   │   │               │   │       │       └── fnv v1.0.7 default,std
+│   │   │   │               │   │       ├── ident_case feature "default"
+│   │   │   │               │   │       │   └── ident_case v1.0.1
+│   │   │   │               │   │       └── strsim feature "default"
+│   │   │   │               │   │           └── strsim v0.11.1
+│   │   │   │               │   └── darling_macro feature "default"
+│   │   │   │               │       └── darling_macro v0.20.11 (proc-macro)
+│   │   │   │               │           ├── quote feature "default" (*)
+│   │   │   │               │           ├── syn feature "default" (*)
+│   │   │   │               │           └── darling_core feature "default" (*)
+│   │   │   │               └── darling feature "suggestions"
+│   │   │   │                   ├── darling v0.20.11 default,suggestions (*)
+│   │   │   │                   └── darling_core feature "suggestions"
+│   │   │   │                       ├── darling_core v0.20.11 strsim,suggestions (*)
+│   │   │   │                       └── darling_core feature "strsim"
+│   │   │   │                           └── darling_core v0.20.11 strsim,suggestions (*)
+│   │   │   └── serde feature "alloc" (*)
+│   │   ├── serde_with feature "default"
+│   │   │   ├── serde_with v3.12.0 alloc,default,macros,std (*)
+│   │   │   ├── serde_with feature "macros"
+│   │   │   │   └── serde_with v3.12.0 alloc,default,macros,std (*)
+│   │   │   └── serde_with feature "std"
+│   │   │       ├── serde_with v3.12.0 alloc,default,macros,std (*)
+│   │   │       ├── serde feature "std" (*)
+│   │   │       └── serde_with feature "alloc" (*)
+│   │   ├── serde_with feature "macros" (*)
 │   │   ├── sha3 feature "reset"
 │   │   │   └── sha3 v0.10.8 reset,std
 │   │   │       ├── digest feature "default"
@@ -389,30 +405,15 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │   │       │   └── digest v0.10.7 alloc,block-buffer,core-api,default,mac,rand_core,std,subtle (*)
 │   │   │       └── crypto-common feature "std"
 │   │   │           └── crypto-common v0.1.6 rand_core,std (*)
-│   │   ├── zeroize feature "alloc"
-│   │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive
-│   │   │       ├── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
-│   │   │       └── zeroize_derive feature "default"
-│   │   │           └── zeroize_derive v1.4.2 (proc-macro)
-│   │   │               ├── proc-macro2 feature "default" (*)
-│   │   │               ├── quote feature "default" (*)
-│   │   │               ├── syn feature "default" (*)
-│   │   │               ├── syn feature "extra-traits" (*)
-│   │   │               ├── syn feature "full" (*)
-│   │   │               └── syn feature "visit"
-│   │   │                   └── syn v2.0.101 clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit,visit-mut (*)
-│   │   ├── zeroize feature "derive"
-│   │   │   ├── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
-│   │   │   └── zeroize feature "zeroize_derive"
-│   │   │       └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
-│   │   ├── zeroize feature "serde"
-│   │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
-│   │   ├── zeroize feature "simd"
-│   │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
-│   │   ├── zeroize feature "std"
-│   │   │   ├── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
-│   │   │   └── zeroize feature "alloc" (*)
-│   │   └── zeroize feature "zeroize_derive" (*)
+│   │   └── thiserror feature "default"
+│   │       ├── thiserror v2.0.12 default,std
+│   │       │   └── thiserror-impl feature "default"
+│   │       │       └── thiserror-impl v2.0.12 (proc-macro)
+│   │       │           ├── proc-macro2 feature "default" (*)
+│   │       │           ├── quote feature "default" (*)
+│   │       │           └── syn feature "default" (*)
+│   │       └── thiserror feature "std"
+│   │           └── thiserror v2.0.12 default,std (*)
 │   │   [dev-dependencies]
 │   │   ├── insta feature "default"
 │   │   │   ├── insta v1.43.1 colors,console,default,json,ron,serde
@@ -521,7 +522,7 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │       │       │       ├── cfg-if feature "default" (*)
 │   │       │       │       ├── rustix feature "event"
 │   │       │       │       │   └── rustix v0.38.44 alloc,event,fs,libc-extra-traits,net,pipe,process,std,time
-│   │       │       │       │       ├── bitflags v2.9.0 std
+│   │       │       │       │       ├── bitflags v2.9.1 std
 │   │       │       │       │       ├── linux-raw-sys feature "elf"
 │   │       │       │       │       │   └── linux-raw-sys v0.4.15 elf,errno,general,if_ether,ioctl,net,netlink,no_std,prctl,xdp
 │   │       │       │       │       ├── linux-raw-sys feature "errno"
@@ -547,7 +548,7 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │       │       │       │   ├── rustix feature "libc-extra-traits"
 │   │       │       │       │   │   └── rustix v0.38.44 alloc,event,fs,libc-extra-traits,net,pipe,process,std,time (*)
 │   │       │       │       │   └── bitflags feature "std"
-│   │       │       │       │       └── bitflags v2.9.0 std
+│   │       │       │       │       └── bitflags v2.9.1 std
 │   │       │       │       └── rustix feature "time"
 │   │       │       │           └── rustix v0.38.44 alloc,event,fs,libc-extra-traits,net,pipe,process,std,time (*)
 │   │       │       ├── rustix feature "fs" (*)
@@ -582,7 +583,7 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │                           └── piper v0.2.4 default,futures-io,std (*)
 │   ├── async-lock feature "default" (*)
 │   ├── bitflags feature "default"
-│   │   └── bitflags v2.9.0 std
+│   │   └── bitflags v2.9.1 std
 │   ├── bitflags feature "std" (*)
 │   ├── tracing feature "attributes" (*)
 │   ├── tracing feature "std" (*)
@@ -656,43 +657,112 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │       └── erased-serde feature "alloc"
 │   │           ├── erased-serde v0.4.6 alloc,default,std (*)
 │   │           └── serde feature "alloc" (*)
-│   ├── hashbrown feature "allocator-api2"
-│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
-│   ├── hashbrown feature "equivalent"
-│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
-│   ├── hashbrown feature "inline-more"
-│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
-│   ├── hashbrown feature "raw-entry"
-│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
-│   ├── hashbrown feature "serde"
-│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
-│   ├── hmac feature "reset"
-│   │   └── hmac v0.12.1 reset,std
-│   │       ├── digest feature "default" (*)
-│   │       └── digest feature "mac" (*)
-│   ├── hmac feature "std"
-│   │   ├── hmac v0.12.1 reset,std (*)
-│   │   └── digest feature "std" (*)
-│   ├── inventory feature "default"
-│   │   └── inventory v0.3.20
-│   ├── itertools feature "default" (*)
-│   ├── lazy_static feature "default"
-│   │   └── lazy_static v1.5.0
-│   ├── num-bigint feature "default" (*)
-│   ├── num-bigint feature "serde" (*)
-│   ├── num-integer feature "default" (*)
-│   ├── num-traits feature "default" (*)
-│   ├── num-traits feature "libm" (*)
-│   ├── rand feature "alloc" (*)
-│   ├── serde_json feature "default" (*)
-│   ├── serde_json feature "preserve_order" (*)
-│   ├── serde_json feature "std" (*)
-│   ├── serde_tokenstream feature "default"
-│   │   └── serde_tokenstream v0.2.2
-│   │       ├── proc-macro2 feature "default" (*)
-│   │       ├── quote feature "default" (*)
+│   ├── fixed-width-nonnegative feature "montgomery"
+│   │   └── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint
+│   │       ├── base16ct v0.2.0 alloc
+│   │       ├── paste v1.0.15 (proc-macro)
+│   │       ├── anyhow feature "default" (*)
+│   │       ├── cfg-if feature "default" (*)
 │   │       ├── serde feature "default" (*)
 │   │       ├── serde feature "derive" (*)
+│   │       ├── serde feature "rc" (*)
+│   │       ├── serde feature "std" (*)
+│   │       ├── bytemuck feature "derive"
+│   │       │   ├── bytemuck v1.23.0 bytemuck_derive,derive,min_const_generics
+│   │       │   │   └── bytemuck_derive feature "default"
+│   │       │   │       └── bytemuck_derive v1.9.3 (proc-macro)
+│   │       │   │           ├── proc-macro2 feature "default" (*)
+│   │       │   │           ├── quote feature "default" (*)
+│   │       │   │           └── syn feature "default" (*)
+│   │       │   └── bytemuck feature "bytemuck_derive"
+│   │       │       └── bytemuck v1.23.0 bytemuck_derive,derive,min_const_generics (*)
+│   │       ├── bytemuck feature "min_const_generics"
+│   │       │   └── bytemuck v1.23.0 bytemuck_derive,derive,min_const_generics (*)
+│   │       ├── crypto-bigint feature "serde"
+│   │       │   └── crypto-bigint v0.6.1 serde,zeroize
+│   │       │       ├── num-traits v0.2.19 default,i128,libm,std (*)
+│   │       │       ├── serdect v0.3.0
+│   │       │       │   ├── base16ct v0.2.0 alloc
+│   │       │       │   └── serde v1.0.219 alloc,default,derive,rc,serde_derive,std (*)
+│   │       │       ├── subtle v2.6.1
+│   │       │       └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │       ├── crypto-bigint feature "zeroize"
+│   │       │   └── crypto-bigint v0.6.1 serde,zeroize (*)
+│   │       ├── num-traits feature "default" (*)
+│   │       ├── num-traits feature "i128" (*)
+│   │       ├── num-traits feature "libm" (*)
+│   │       ├── zeroize feature "alloc" (*)
+│   │       ├── zeroize feature "derive" (*)
+│   │       ├── zeroize feature "serde" (*)
+│   │       ├── zeroize feature "simd" (*)
+│   │       ├── zeroize feature "std" (*)
+│   │       ├── zeroize feature "zeroize_derive" (*)
+│   │       ├── num-bigint feature "default" (*)
+│   │       ├── num-bigint feature "serde" (*)
+│   │       ├── num-bigint feature "std" (*)
+│   │       ├── static_assertions feature "default" (*)
+│   │       ├── strum feature "default"
+│   │       │   ├── strum v0.27.1 default,derive,std,strum_macros
+│   │       │   │   └── strum_macros feature "default"
+│   │       │   │       └── strum_macros v0.27.1 (proc-macro)
+│   │       │   │           ├── proc-macro2 feature "default" (*)
+│   │       │   │           ├── quote feature "default" (*)
+│   │       │   │           ├── syn feature "default" (*)
+│   │       │   │           ├── syn feature "parsing" (*)
+│   │       │   │           ├── heck feature "default"
+│   │       │   │           │   └── heck v0.5.0
+│   │       │   │           └── rustversion feature "default"
+│   │       │   │               └── rustversion v1.0.20 (proc-macro)
+│   │       │   └── strum feature "std"
+│   │       │       └── strum v0.27.1 default,derive,std,strum_macros (*)
+│   │       ├── strum feature "derive"
+│   │       │   ├── strum v0.27.1 default,derive,std,strum_macros (*)
+│   │       │   └── strum feature "strum_macros"
+│   │       │       └── strum v0.27.1 default,derive,std,strum_macros (*)
+│   │       └── strum feature "std" (*)
+│   │       [build-dependencies]
+│   │       ├── cfg_aliases v0.2.1
+│   │       ├── prettyplease v0.2.32
+│   │       │   ├── proc-macro2 v1.0.95 default,proc-macro (*)
+│   │       │   └── syn feature "full" (*)
+│   │       ├── anyhow feature "default" (*)
+│   │       ├── proc-macro2 feature "default" (*)
+│   │       ├── proc-macro2 feature "proc-macro" (*)
+│   │       ├── quote feature "default" (*)
+│   │       ├── quote feature "proc-macro" (*)
+│   │       ├── syn feature "default" (*)
+│   │       ├── syn feature "full" (*)
+│   │       ├── cfg-if feature "default" (*)
+│   │       ├── either feature "default"
+│   │       │   ├── either v1.15.0 default,serde,std
+│   │       │   │   ├── serde feature "alloc"
+│   │       │   │   │   └── serde v1.0.219 alloc,derive,serde_derive
+│   │       │   │   │       └── serde_derive feature "default" (*)
+│   │       │   │   └── serde feature "derive"
+│   │       │   │       ├── serde v1.0.219 alloc,derive,serde_derive (*)
+│   │       │   │       └── serde feature "serde_derive"
+│   │       │   │           └── serde v1.0.219 alloc,derive,serde_derive (*)
+│   │       │   └── either feature "std"
+│   │       │       └── either v1.15.0 default,serde,std (*)
+│   │       ├── either feature "serde"
+│   │       │   └── either v1.15.0 default,serde,std (*)
+│   │       ├── inventory feature "default"
+│   │       │   └── inventory v0.3.20
+│   │       ├── strum feature "default" (*)
+│   │       ├── strum feature "derive" (*)
+│   │       ├── strum feature "std" (*)
+│   │       ├── tracing feature "attributes"
+│   │       │   ├── tracing v0.1.41 attributes,std,tracing-attributes
+│   │       │   │   ├── tracing-core v0.1.33 once_cell,std (*)
+│   │       │   │   ├── pin-project-lite feature "default" (*)
+│   │       │   │   └── tracing-attributes feature "default" (*)
+│   │       │   └── tracing feature "tracing-attributes"
+│   │       │       └── tracing v0.1.41 attributes,std,tracing-attributes (*)
+│   │       └── tracing feature "std"
+│   │           ├── tracing v0.1.41 attributes,std,tracing-attributes (*)
+│   │           └── tracing-core feature "std" (*)
+│   │       [dev-dependencies]
+│   │       ├── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
 │   │       ├── syn feature "default"
 │   │       │   ├── syn v2.0.101 clone-impls,default,derive,full,parsing,printing,proc-macro
 │   │       │   │   ├── proc-macro2 v1.0.95 default,proc-macro (*)
@@ -712,9 +782,62 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │       │       └── quote feature "proc-macro" (*)
 │   │       └── syn feature "full"
 │   │           └── syn v2.0.101 clone-impls,default,derive,full,parsing,printing,proc-macro (*)
+│   ├── fixed-width-nonnegative feature "num-bigint" (command-line)
+│   │   └── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
+│   ├── num-traits feature "default" (*)
+│   ├── num-traits feature "i128" (*)
+│   ├── num-traits feature "libm" (*)
+│   ├── zeroize feature "alloc" (*)
+│   ├── zeroize feature "derive" (*)
+│   ├── zeroize feature "serde" (*)
+│   ├── zeroize feature "simd" (*)
+│   ├── zeroize feature "std" (*)
+│   ├── zeroize feature "zeroize_derive" (*)
+│   ├── inventory feature "default" (*)
+│   ├── num-bigint feature "default" (*)
+│   ├── num-bigint feature "serde" (*)
+│   ├── num-integer feature "default" (*)
+│   ├── static_assertions feature "default" (*)
+│   ├── strum feature "default" (*)
+│   ├── strum feature "derive" (*)
+│   ├── strum feature "std" (*)
+│   ├── strum_macros feature "default" (*)
+│   ├── itertools feature "default" (*)
+│   ├── rand feature "alloc" (*)
+│   ├── serde_json feature "default" (*)
+│   ├── serde_json feature "preserve_order" (*)
+│   ├── serde_json feature "std" (*)
+│   ├── hashbrown feature "allocator-api2"
+│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
+│   ├── hashbrown feature "equivalent"
+│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
+│   ├── hashbrown feature "inline-more"
+│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
+│   ├── hashbrown feature "raw-entry"
+│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
+│   ├── hashbrown feature "serde"
+│   │   └── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
 │   ├── serde_with feature "alloc" (*)
 │   ├── serde_with feature "default" (*)
 │   ├── serde_with feature "macros" (*)
+│   ├── thiserror feature "default" (*)
+│   ├── hmac feature "reset"
+│   │   └── hmac v0.12.1 reset,std
+│   │       ├── digest feature "default" (*)
+│   │       └── digest feature "mac" (*)
+│   ├── hmac feature "std"
+│   │   ├── hmac v0.12.1 reset,std (*)
+│   │   └── digest feature "std" (*)
+│   ├── lazy_static feature "default"
+│   │   └── lazy_static v1.5.0
+│   ├── serde_tokenstream feature "default"
+│   │   └── serde_tokenstream v0.2.2
+│   │       ├── proc-macro2 feature "default" (*)
+│   │       ├── quote feature "default" (*)
+│   │       ├── serde feature "default" (*)
+│   │       ├── serde feature "derive" (*)
+│   │       ├── syn feature "default" (*)
+│   │       └── syn feature "full" (*)
 │   ├── sha2 feature "compress"
 │   │   └── sha2 v0.10.9 compress,std
 │   │       ├── cfg-if feature "default" (*)
@@ -724,36 +847,8 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   ├── sha2 feature "std"
 │   │   ├── sha2 v0.10.9 compress,std (*)
 │   │   └── digest feature "std" (*)
-│   ├── static_assertions feature "default" (*)
-│   ├── strum feature "default"
-│   │   ├── strum v0.27.1 default,derive,std,strum_macros
-│   │   │   └── strum_macros feature "default"
-│   │   │       └── strum_macros v0.27.1 (proc-macro)
-│   │   │           ├── proc-macro2 feature "default" (*)
-│   │   │           ├── quote feature "default" (*)
-│   │   │           ├── syn feature "default" (*)
-│   │   │           ├── syn feature "parsing" (*)
-│   │   │           ├── heck feature "default"
-│   │   │           │   └── heck v0.5.0
-│   │   │           └── rustversion feature "default"
-│   │   │               └── rustversion v1.0.20 (proc-macro)
-│   │   └── strum feature "std"
-│   │       └── strum v0.27.1 default,derive,std,strum_macros (*)
-│   ├── strum feature "derive"
-│   │   ├── strum v0.27.1 default,derive,std,strum_macros (*)
-│   │   └── strum feature "strum_macros"
-│   │       └── strum v0.27.1 default,derive,std,strum_macros (*)
-│   ├── strum feature "std" (*)
-│   ├── strum_macros feature "default" (*)
-│   ├── thiserror feature "default" (*)
-│   ├── unicode-properties feature "general-category"
-│   │   └── unicode-properties v0.1.3 general-category
-│   ├── zeroize feature "alloc" (*)
-│   ├── zeroize feature "derive" (*)
-│   ├── zeroize feature "serde" (*)
-│   ├── zeroize feature "simd" (*)
-│   ├── zeroize feature "std" (*)
-│   └── zeroize feature "zeroize_derive" (*)
+│   └── unicode-properties feature "general-category"
+│       └── unicode-properties v0.1.3 general-category
 │   [dev-dependencies]
 │   ├── derive_more feature "add_assign"
 │   │   ├── derive_more v2.0.1 add_assign,debug,deref,deref_mut,display,from,into (*)
@@ -893,18 +988,20 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │           └── test-log-macros v0.2.17 (proc-macro) trace (*)
 ├── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation
 │   ├── rand_xorshift v0.4.0  (*)
+│   ├── rand_xoshiro v0.7.0
+│   │   └── rand_core feature "default" (*)
 │   ├── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
 │   ├── anyhow feature "default" (*)
 │   ├── typenum feature "const-generics" (*)
+│   ├── base16ct feature "alloc"
+│   │   └── base16ct v0.2.0 alloc
+│   ├── static_assertions feature "default" (*)
 │   ├── itertools feature "default" (*)
 │   ├── rand feature "alloc" (*)
 │   ├── rand_core feature "std" (*)
+│   ├── rand_distr feature "std_math" (*)
 │   ├── sha2 feature "compress" (*)
 │   ├── sha2 feature "std" (*)
-│   ├── static_assertions feature "default" (*)
-│   ├── rand_distr feature "std_math" (*)
-│   ├── base16ct feature "alloc"
-│   │   └── base16ct v0.2.0 alloc
 │   ├── const-default feature "default"
 │   │   ├── const-default v1.0.0 default,enable-atomics
 │   │   └── const-default feature "enable-atomics"
@@ -912,15 +1009,21 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   ├── fnv feature "std"
 │   │   └── fnv v1.0.7 std
 │   ├── generic-array feature "const-default"
-│   │   └── generic-array v1.2.0 const-default
+│   │   └── generic-array v1.2.0 const-default,zeroize
 │   │       ├── const-default v1.0.0 default,enable-atomics
-│   │       ├── typenum feature "const-generics" (*)
-│   │       └── typenum feature "default" (*)
-│   ├── hybrid-array feature "zeroize"
-│   │   └── hybrid-array v0.3.1 zeroize
 │   │       ├── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
 │   │       ├── typenum feature "const-generics" (*)
 │   │       └── typenum feature "default" (*)
+│   ├── generic-array feature "zeroize"
+│   │   └── generic-array v1.2.0 const-default,zeroize (*)
+│   ├── hybrid-array feature "bytemuck"
+│   │   └── hybrid-array v0.3.1 bytemuck,zeroize
+│   │       ├── bytemuck v1.23.0 bytemuck_derive,derive,min_const_generics (*)
+│   │       ├── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive (*)
+│   │       ├── typenum feature "const-generics" (*)
+│   │       └── typenum feature "default" (*)
+│   ├── hybrid-array feature "zeroize"
+│   │   └── hybrid-array v0.3.1 bytemuck,zeroize (*)
 │   ├── indoc feature "default"
 │   │   └── indoc v2.0.6 (proc-macro)
 │   └── textwrap feature "unicode-width"
@@ -930,6 +1033,7 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │               └── unicode-width feature "cjk"
 │                   └── unicode-width v0.2.0 cjk,default
 │   [dev-dependencies]
+│   ├── fixedbitset v0.5.7
 │   ├── icu_locid v1.5.0 zerovec
 │   │   ├── displaydoc v0.2.5 (proc-macro)
 │   │   │   ├── proc-macro2 feature "default" (*)
@@ -998,6 +1102,9 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   │   │       └── tinyvec v1.9.0 alloc,default,tinyvec_macros (*)
 │   │   └── tinyvec feature "default"
 │   │       └── tinyvec v1.9.0 alloc,default,tinyvec_macros (*)
+│   ├── num-traits feature "default" (*)
+│   ├── num-traits feature "i128" (*)
+│   ├── num-traits feature "libm" (*)
 │   ├── insta feature "default" (*)
 │   ├── insta feature "json" (*)
 │   ├── insta feature "ron" (*)
@@ -1099,7 +1206,7 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │   └── tracing-subscriber v0.3.19 alloc,ansi,env-filter,fmt,matchers,nu-ansi-term,once_cell,regex,registry,sharded-slab,smallvec,std,thread_local,tracing (*)
 ├── tracing-subscriber feature "std" (*)
 ├── ractor feature "async-std"
-│   └── ractor v0.15.5 async-std,async-trait
+│   └── ractor v0.15.6 async-std,async-trait
 │       ├── async-trait feature "default"
 │       │   └── async-trait v0.1.88 (proc-macro)  (*)
 │       ├── tracing feature "attributes" (*)
@@ -1390,12 +1497,12 @@ demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-non
 │       │   └── strum feature "strum_macros"
 │       │       └── strum v0.26.3 default,derive,std,strum_macros (*)
 │       ├── tokio feature "default"
-│       │   └── tokio v1.44.2 default,sync
+│       │   └── tokio v1.45.0 default,sync
 │       │       └── pin-project-lite feature "default" (*)
 │       └── tokio feature "sync"
-│           └── tokio v1.44.2 default,sync (*)
+│           └── tokio v1.45.0 default,sync (*)
 ├── ractor feature "async-trait"
-│   └── ractor v0.15.5 async-std,async-trait (*)
+│   └── ractor v0.15.6 async-std,async-trait (*)
 ├── tracing-futures feature "std"
 │   ├── tracing-futures v0.2.5 pin-project,std,std-future
 │   │   ├── tracing v0.1.41 attributes,default,std,tracing-attributes (*)
@@ -1442,14 +1549,14 @@ eg-dataproducer-filesystem v0.1.0 (src/eg-resourceproducer-filesystem) eg-allow-
 ├── serde feature "std" (*)
 ├── erased-serde feature "default" (*)
 ├── inventory feature "default" (*)
+├── static_assertions feature "default" (*)
 ├── serde_json feature "default" (*)
 ├── serde_json feature "preserve_order" (*)
 ├── serde_json feature "std" (*)
-├── serde_tokenstream feature "default" (*)
 ├── serde_with feature "alloc" (*)
 ├── serde_with feature "default" (*)
 ├── serde_with feature "macros" (*)
-└── static_assertions feature "default" (*)
+└── serde_tokenstream feature "default" (*)
 [dev-dependencies]
 ├── insta feature "default" (*)
 ├── insta feature "json" (*)
@@ -1469,8 +1576,8 @@ electionguard v0.1.0 (src/electionguard) eg-allow-insecure-deterministic-csprng,
 ├── zeroize feature "std" (*)
 ├── zeroize feature "zeroize_derive" (*)
 ├── clap feature "default"
-│   ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage
-│   │   ├── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage
+│   ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage
+│   │   ├── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage
 │   │   │   ├── strsim feature "default" (*)
 │   │   │   ├── anstream feature "default"
 │   │   │   │   ├── anstream v0.6.18 auto,default,wincon
@@ -1506,37 +1613,39 @@ electionguard v0.1.0 (src/electionguard) eg-allow-insecure-deterministic-csprng,
 │   │           ├── syn feature "full" (*)
 │   │           └── heck feature "default" (*)
 │   ├── clap feature "color"
-│   │   ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│   │   ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 │   │   └── clap_builder feature "color"
-│   │       └── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+│   │       └── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
 │   ├── clap feature "error-context"
-│   │   ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│   │   ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 │   │   └── clap_builder feature "error-context"
-│   │       └── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+│   │       └── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
 │   ├── clap feature "help"
-│   │   ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│   │   ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 │   │   └── clap_builder feature "help"
-│   │       └── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+│   │       └── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
 │   ├── clap feature "std"
-│   │   ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│   │   ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 │   │   └── clap_builder feature "std"
-│   │       ├── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+│   │       ├── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
 │   │       └── anstyle feature "std" (*)
 │   ├── clap feature "suggestions"
-│   │   ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│   │   ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 │   │   └── clap_builder feature "suggestions"
-│   │       ├── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+│   │       ├── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
 │   │       └── clap_builder feature "error-context" (*)
 │   └── clap feature "usage"
-│       ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│       ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 │       └── clap_builder feature "usage"
-│           └── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+│           └── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
 ├── clap feature "derive"
-│   └── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+│   └── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
 └── clap feature "env"
-    ├── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage (*)
+    ├── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage (*)
     └── clap_builder feature "env"
-        └── clap_builder v4.5.37 color,env,error-context,help,std,suggestions,usage (*)
+        └── clap_builder v4.5.38 color,env,error-context,help,std,suggestions,usage (*)
+
+fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
 
 test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
 
@@ -1576,13 +1685,13 @@ test-electionguard v0.1.0 (src/test-electionguard) eg-allow-insecure-determinist
 ├── async-io feature "default" (*)
 ├── tracing feature "attributes" (*)
 ├── tracing feature "std" (*)
+├── static_assertions feature "default" (*)
 ├── itertools feature "default" (*)
 ├── rand_core feature "std" (*)
-├── static_assertions feature "default" (*)
+├── rand_distr feature "std_math" (*)
 ├── tracing-subscriber feature "fmt" (*)
 ├── tracing-subscriber feature "smallvec" (*)
 ├── tracing-subscriber feature "std" (*)
-├── rand_distr feature "std_math" (*)
 ├── clap feature "default" (*)
 ├── clap feature "derive" (*)
 └── clap feature "env" (*)

@@ -27,7 +27,7 @@ use crate::{
     ciphertext::Ciphertext,
     eg::Eg,
     election_parameters::ElectionParameters,
-    errors::{EgError, EgResult, ResourceProductionError},
+    errors::{EgError, EgResult},
     fixed_parameters::{FixedParameters, FixedParametersTrait, FixedParametersTraitExt},
     guardian::GuardianIndex,
     guardian_public_key_trait::GuardianKeyInfoTrait,
@@ -36,7 +36,9 @@ use crate::{
         ProduceResource, ProduceResourceExt, Resource, ResourceFormat, ResourceId, ResourceIdFormat,
     },
     resource_id::ElectionDataObjectId as EdoId,
-    resource_producer::{ResourceProductionResult, ResourceSource, RpOp, ValidReason},
+    resource_producer::{
+        ResourceProductionError, ResourceProductionResult, ResourceSource, RpOp, ValidReason,
+    },
     resource_producer_registry::RPFnRegistration,
     resourceproducer_specific::GatherRPFnRegistrationsFnWrapper,
     serializable::SerializableCanonical,
@@ -153,11 +155,24 @@ impl JointPublicKey {
         Ok(self_)
     }
 
-    /// Encrypts a value to the joint election public key to produce a [`Ciphertext`].
+    /// Encrypts a value to the joint election public key to produce a [`Ciphertext`] per
+    /// EGDS 2.1.0 eq. 31 pg. 28.
+    ///
+    /// Note: EGDS 2.1.0 eq 31 pg. 28. literally says `K^{sigma + xi}`, but here we are computing
+    /// `K^{(sigma + xi) mod q}`. This allows us to do everything using the fixed sized 256-bit
+    /// `FieldElement` type, so we benefit from its zeroization, and other properties.
+    ///
+    /// This is equivalent for two reasons:
+    ///
+    /// - `xi` is randomly selected from `0..2^256`, and sigma is guaranteed to be `0..2^31`,
+    ///   so P_overflow ~= 2^-(256-31+1). I.e., carry out of the addition would require `xi` to have
+    ///   to have `226` consecutive leading `1` bits.
+    /// - `K` is known to be in the order-`q` multiplicative subgroup Z*_p, so the `mod q` happens
+    ///   anyway.
     pub fn encrypt_to<T>(
         &self,
         fixed_parameters: &FixedParameters,
-        nonce: &FieldElement,
+        xi_nonce: &FieldElement,
         value: T,
     ) -> Ciphertext
     where
@@ -166,8 +181,10 @@ impl JointPublicKey {
         let field = fixed_parameters.field();
         let group = fixed_parameters.group();
 
-        let alpha = group.g_exp(nonce);
-        let exponent = &nonce.add(&FieldElement::from(value, field), field);
+        let alpha = group.g_exp(xi_nonce);
+
+        let exponent = &xi_nonce.add(&FieldElement::from(value, field), field);
+
         let beta = self.group_element.exp(exponent, group);
 
         Ciphertext { alpha, beta }
@@ -369,6 +386,7 @@ mod t {
         eg::Eg,
         errors::EgResult,
         fixed_parameters::{FixedParameters, FixedParametersTrait, FixedParametersTraitExt},
+        hash::{HValue, HValueByteArray},
         key::KeyPurpose,
         resource::{ProduceResource, ProduceResourceExt},
         secret_coefficient::SecretCoefficient,
@@ -432,6 +450,47 @@ mod t {
 
     #[test_log::test]
     #[ignore]
+    pub fn t3_encrypt_decrypt() {
+        async_global_executor::block_on(async {
+            use crate::key::KeyPurpose;
+            let eg = Eg::new_with_test_data_generation_and_insecure_deterministic_csprng_seed(
+                "eg::joint_public_key::t::t3_encrypt_to",
+            );
+            let fixed_parameters = eg.fixed_parameters().await.unwrap();
+            let fixed_parameters = fixed_parameters.as_ref();
+            let field = fixed_parameters.field();
+
+            let guardian_key_purpose = KeyPurpose::Ballot_Votes;
+            let jvepk_k = eg.joint_vote_encryption_public_key_k().await.unwrap();
+
+            let sk = eg
+                .guardians_secret_keys(guardian_key_purpose)
+                .await
+                .unwrap()
+                .iter()
+                .fold(ScalarField::zero(), |a, b| {
+                    a.add(&b.secret_coefficients().as_slice()[0].0, field)
+                });
+            let secret_coeff = SecretCoefficient(sk);
+
+            let nonce: &HValueByteArray = b"fedcba98765432100123456789abcdef";
+            //let nonce = HValue::from(nonce);
+            let nonce = FieldElement::from_bytes_be(nonce, field);
+            debug!("Nonce {nonce:?}");
+
+            let plaintext = 42_u32;
+            let ciphertext = jvepk_k.encrypt_to(fixed_parameters, &nonce, plaintext);
+            debug!("Ciphertext {ciphertext:?}");
+
+            let result = decrypt_ciphertext(&ciphertext, &jvepk_k, &secret_coeff, fixed_parameters);
+            debug!("decrypted result: {result:?}");
+
+            assert_eq!(result, FieldElement::from(plaintext, field));
+        });
+    }
+
+    #[test_log::test]
+    #[ignore]
     pub fn t3_jvepk_k_scaling() {
         async_global_executor::block_on(async {
             use crate::key::KeyPurpose;
@@ -460,7 +519,6 @@ mod t {
 
             let joint_public_key = eg.joint_public_key(guardian_key_purpose).await.unwrap();
 
-            debug!("key_purpose: {guardian_key_purpose}");
             debug!("joint_public_key {joint_public_key:?}");
 
             let nonce = FieldElement::from(BigUint::from(5u8), field);
@@ -490,18 +548,4 @@ mod t {
             assert_eq!(result, factor);
         });
     }
-
-    /* //? TODO
-    #[test_log::test]
-    pub fn jbdepk_khat() {
-        async_global_executor::block_on(jbdepk_khat_async());
-    }
-
-    async fn jbdepk_khat_async() {
-        use crate::guardian::GuardianKeyPurpose;
-        let _eg = Eg::new_with_test_data_generation_and_insecure_deterministic_csprng_seed(
-            "eg::joint_public_key::t::jbdepk_khat",
-        );
-    }
-    // */
 }

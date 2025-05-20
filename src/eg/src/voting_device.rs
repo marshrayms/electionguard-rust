@@ -442,6 +442,7 @@ impl VotingDeviceInformation {
     ///
     /// If there's an error, you *may* get your original buffer back.
     ///
+    #[allow(clippy::result_large_err)]
     pub fn extend_with_encoded_s_device(
         &self,
         mut v: Vec<u8>,
@@ -655,7 +656,7 @@ mod t {
     }
 
     #[test_log::test]
-    fn t1_VdiSpecItem_3_ExplicitlyNotVotingDeviceInformation_VotingLocationUniqueIdentifier() {
+    fn t1_VdiSpecItem_3_NotVotingDeviceInformation_VotingLocationUniqueIdentifier() {
         let vdi_spec_item = VdiSpecItem::NotVotingDeviceInfo(
             NotVotingDeviceInfoItem::VotingLocationUniqueIdentifier,
         );
@@ -729,9 +730,8 @@ mod t {
         //use NotVotingDeviceInfoItem::*;
         use VdiSpecItem_Requiredness::*;
 
-        /*
         {
-            let v: Vec<VdiSpecItem_ExplicitlyNotVotingDeviceInformation> = [
+            let v: Vec<NotVotingDeviceInfoItem> = [
                 NotVotingDeviceInfoItem::VotingLocationUniqueIdentifier,
                 NotVotingDeviceInfoItem::VotingLocationUniqueIdentifier,
             ]
@@ -742,7 +742,6 @@ mod t {
                 serde_json::to_string_pretty(&v).unwrap(),
                 @r#""[\n  \"VotingLocationUniqueIdentifier\",\n  \"VotingLocationUniqueIdentifier\"\n]""#);
         }
-        // */
 
         {
             let v: Vec<VdiSpecItem_Requiredness> = [Optional, Required, Required, Optional]

@@ -1,15 +1,15 @@
 
-+ /usr/bin/time cargo test --release --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-forbid-reduced-params,eg-allow-unsafe-code -- --test-threads=1
-    Finished `release` profile [optimized] target(s) in 0.15s
-     Running unittests src/main.rs (target/release/deps/demo_eg-4a0b013b3bf67140)
++ /usr/bin/time cargo test --release --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params,num-bigint,crypto-bigint -- --test-threads=1
+    Finished `release` profile [optimized] target(s) in 0.14s
+     Running unittests src/main.rs (target/release/deps/demo_eg-56cdfb1889201861)
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-     Running unittests src/lib.rs (target/release/deps/eg-c6c507421e87eba4)
+     Running unittests src/lib.rs (target/release/deps/eg-eb26b074c5c235da)
 
-running 106 tests
+running 108 tests
 test algebra::test::test_field_conversions ... ok
 test algebra::test::test_field_group_validity ... ok
 test algebra::test::test_field_operations ... ok
@@ -75,6 +75,7 @@ test ident::t::t0 ... ok
 test interguardian_share::t::test_encryption_decryption ... ignored
 test joint_public_key::t::t1_generate_jvepk_k ... ok
 test joint_public_key::t::t2_generate_jbdepk_k_hat ... ok
+test joint_public_key::t::t3_encrypt_decrypt ... ignored
 test joint_public_key::t::t3_jvepk_k_scaling ... ignored
 test label::t::t1 ... ok
 test label::t::t2 ... ok
@@ -101,12 +102,13 @@ test standard_parameters::t::t_make_standard_parameters_egds_v2_1 ... ok
 test tally_ballots::t::t1_tally_ballots ... ignored
 test verifiable_decryption::t1::test_decryption_share_combination ... ignored
 test verifiable_decryption::t2::test_decryption_overall ... ignored
+test voter_selections_plaintext::t::t1 ... ok
 test voting_device::t::t10 ... ignored
 test voting_device::t::t11 ... ok
 test voting_device::t::t12 ... ok
 test voting_device::t::t1_VdiSpecItem_1_VotingDeviceUniqueIdentifier ... ok
 test voting_device::t::t1_VdiSpecItem_2_OtherVotingDeviceInfo_device_color ... ok
-test voting_device::t::t1_VdiSpecItem_3_ExplicitlyNotVotingDeviceInformation_VotingLocationUniqueIdentifier ... ok
+test voting_device::t::t1_VdiSpecItem_3_NotVotingDeviceInformation_VotingLocationUniqueIdentifier ... ok
 test voting_device::t::t2_Vec_VdiSpecItem ... ok
 test voting_device::t::t2_VotingDeviceInformationSpec_default ... ok
 test voting_device::t::t3 ... ok
@@ -127,7 +129,7 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 ---- resourceproducer_validatetoedo::t::t1 stdout ----
 
-thread 'resourceproducer_validatetoedo::t::t1' panicked at eg/src/resourceproducer_validatetoedo.rs:385:22:
+thread 'resourceproducer_validatetoedo::t::t1' panicked at eg/src/resourceproducer_validatetoedo.rs:386:22:
 called `Result::unwrap()` on an `Err` value: NoProducerFound { ridfmt: (ElectionManifest,SliceBytes) }
 
 
@@ -135,28 +137,28 @@ failures:
     resourceproducer_exampledata::t::t2
     resourceproducer_validatetoedo::t::t1
 
-test result: FAILED. 82 passed; 2 failed; 22 ignored; 0 measured; 0 filtered out; finished in 1.62s
+test result: FAILED. 83 passed; 2 failed; 23 ignored; 0 measured; 0 filtered out; finished in 1.60s
 
 error: test failed, to rerun pass `-p eg --lib`
 Command exited with non-zero status 101
 
 exit status: 101
 
-elapsed real: 1.83 s
-max resident: 135128 KiB
-page faults:  57186
+elapsed real: 1.84 s
+max resident: 135292 KiB
+page faults:  61338
 
-+ /usr/bin/time cargo test --release --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-forbid-reduced-params,eg-allow-unsafe-code -- --test-threads=1 --ignored
++ /usr/bin/time cargo test --release --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params,num-bigint,crypto-bigint -- --test-threads=1 --ignored
     Finished `release` profile [optimized] target(s) in 0.16s
-     Running unittests src/main.rs (target/release/deps/demo_eg-4a0b013b3bf67140)
+     Running unittests src/main.rs (target/release/deps/demo_eg-56cdfb1889201861)
 
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
-     Running unittests src/lib.rs (target/release/deps/eg-c6c507421e87eba4)
+     Running unittests src/lib.rs (target/release/deps/eg-eb26b074c5c235da)
 
-running 22 tests
+running 23 tests
 test ballot::t::ballotstyle1_contest1_votes_0_0 ... ok
 test ballot::t::ballotstyle1_contest1_votes_0_1 ... ok
 test ballot::t::ballotstyle1_contest1_votes_1_0 ... ok
@@ -174,6 +176,7 @@ test ballot::t::ballotstyle6_contest6_votes_0_1 ... ok
 test ballot::t::ballotstyle6_contest6_votes_1_0 ... ok
 test ballot::t::ballotstyle6_contest6_votes_1_1_range_proof_error ... ok
 test interguardian_share::t::test_encryption_decryption ... FAILED
+test joint_public_key::t::t3_encrypt_decrypt ... ok
 test joint_public_key::t::t3_jvepk_k_scaling ... ok
 test tally_ballots::t::t1_tally_ballots ... FAILED
 test verifiable_decryption::t1::test_decryption_share_combination ... FAILED
@@ -552,7 +555,7 @@ ridfmt: ResourceIdFormat {
 
 
 
-thread 'tally_ballots::t::t1_tally_ballots' panicked at eg/src/tally_ballots.rs:777:13:
+thread 'tally_ballots::t::t1_tally_ballots' panicked at eg/src/tally_ballots.rs:778:13:
 TODO rework for EGDS 2.1.0
 
 ---- verifiable_decryption::t1::test_decryption_share_combination stdout ----
@@ -569,7 +572,7 @@ TODO rework for EGDS 2.1.0
 
 ---- voting_device::t::t10 stdout ----
 
-thread 'voting_device::t::t10' panicked at eg/src/voting_device.rs:1032:62:
+thread 'voting_device::t::t10' panicked at eg/src/voting_device.rs:1031:62:
 called `Result::unwrap()` on an `Err` value: Error("key must be a string", line: 0, column: 0)
 
 
@@ -580,13 +583,29 @@ failures:
     verifiable_decryption::t2::test_decryption_overall
     voting_device::t::t10
 
-test result: FAILED. 17 passed; 5 failed; 0 ignored; 0 measured; 84 filtered out; finished in 25.93s
+test result: FAILED. 18 passed; 5 failed; 0 ignored; 0 measured; 85 filtered out; finished in 40.89s
 
 error: test failed, to rerun pass `-p eg --lib`
 Command exited with non-zero status 101
 
 exit status: 101
 
-elapsed real: 26.13 s
-max resident: 617716 KiB
-page faults:  184729
+elapsed real: 41.12 s
+max resident: 617948 KiB
+page faults:  349300
+
+Overall...
+test result: FAILED
+83 passed
+2 failed
+23 ignored
+0 measured
+0 filtered out
+finished in 1.60s
+test result: FAILED
+18 passed
+5 failed
+0 ignored
+0 measured
+85 filtered out
+finished in 40.89s

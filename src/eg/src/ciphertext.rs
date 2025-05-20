@@ -56,7 +56,7 @@ pub struct Ciphertext {
 }
 
 impl Ciphertext {
-    /// Verify the proof that the cipher text is an encryption of 0 or 1.
+    /// Verify the proof that the ciphertext is an encryption of 0 or 1.
     pub fn verify_ballot_correctness(
         &self,
         pre_voting_data: &PreVotingData,

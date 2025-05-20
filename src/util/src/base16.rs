@@ -123,13 +123,11 @@ mod to_string {
 
 //-------------------------------------------------------------------------------------------------|
 
-/// Read a base16 hex `BigUint` number from a str, using [`num_traits::Num::from_str_radix()`].
-pub fn hex_to_biguint(s: &str) -> BigUint {
+/// Attempt to read a base16 hex `BigUint` number from a str, using
+/// [`num_traits::Num::from_str_radix()`].
+pub fn hex_to_biguint(s: &str) -> Option<BigUint> {
     let s = s.chars().filter(|c| !c.is_whitespace()).collect::<String>();
-
-    // `unwrap()` is justified here because `s` is fixed at compile time.
-    #[allow(clippy::unwrap_used)]
-    BigUint::from_str_radix(s.as_str(), 16).unwrap()
+    BigUint::from_str_radix(s.as_str(), 16).ok()
 }
 
 //-------------------------------------------------------------------------------------------------|

@@ -132,19 +132,19 @@ impl ContestDataFieldsPlaintexts {
     ///   the [`Contest`](crate::election_manifest::Contest). This value is returned by the
     ///   [`Contest::qty_contest_option_data_fields()`](crate::election_manifest::Contest::qty_contest_option_data_fields)
     ///   function.
-    pub fn try_from_option_fields(
+    pub fn try_from_option_fields_plaintexts(
         election_manifest: &ElectionManifest,
         ballot_style: &BallotStyle,
         contest_ix: ContestIndex,
         option_fields_plaintexts: ContestOptionFieldsPlaintexts,
     ) -> EgResult<Self> {
         let contest = ballot_style.get_contest(election_manifest, contest_ix)?;
-        let qty_contest_option_data_fields = contest.qty_contest_option_data_fields();
+        let qty_contest_option_fields = contest.qty_contest_option_data_fields();
 
-        if option_fields_plaintexts.len() != qty_contest_option_data_fields {
+        if option_fields_plaintexts.len() != qty_contest_option_fields {
             let e = EgError::IncorrectQtyOfContestOptionFieldsPlaintexts {
                 contest_ix,
-                qty_expected: qty_contest_option_data_fields,
+                qty_expected: qty_contest_option_fields,
                 qty_supplied: option_fields_plaintexts.len(),
             };
             trace!("{e}");
@@ -153,12 +153,11 @@ impl ContestDataFieldsPlaintexts {
 
         //? TODO: This is probably where we want to add system-assigned data fields for recording (under|over)vote(ed|amount)
         //? TODO: Enforce selection limit
-        //? TODO: Include additional data fields
+        //? TODO: Include additional (homomorphically-tallied) data fields
 
         let v1_option_fields_plaintexts = option_fields_plaintexts.into_inner();
 
-        let mut v1 =
-            Vec1::<ContestDataFieldPlaintext>::with_capacity(v1_option_fields_plaintexts.len());
+        let mut v1 = Vec1::<ContestDataFieldPlaintext>::with_capacity(qty_contest_option_fields);
         for (_option_field_ix, &option_field_plaintext) in v1_option_fields_plaintexts.enumerate() {
             let data_field_plaintext = ContestDataFieldPlaintext::new(option_field_plaintext);
             v1.try_push(data_field_plaintext)?;

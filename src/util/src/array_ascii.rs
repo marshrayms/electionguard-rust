@@ -120,7 +120,6 @@ impl<const N: usize> TryFrom<[u8; N]> for ArrayAscii<N> {
 
 impl<const N: usize> From<ArrayAscii<N>> for [u8; N] {
     /// Converts an `ArrayAscii` to a sized array of bytes.
-    #[must_use]
     #[inline(always)]
     fn from(aa: ArrayAscii<N>) -> Self {
         aa.0

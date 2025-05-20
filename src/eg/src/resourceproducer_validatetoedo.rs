@@ -44,7 +44,7 @@ use crate::{
     },
     resource_producer::{
         ResourceProducer, ResourceProducer_Any_Debug_Serialize, ResourceProductionError,
-        ResourceProductionResult, ResourceSource,
+        ResourceProductionError_CouldntDowncastResource, ResourceProductionResult, ResourceSource,
     },
     resource_producer_registry::{
         FnNewResourceProducer, GatherResourceProducerRegistrationsFnWrapper,
@@ -303,13 +303,14 @@ impl ResourceProducer_ValidateToEdo {
         let src_type = format!("{src_typename} {src_typeid:?}");
         let target_type = format!("{valiated_from_typename} {valiated_from_typename:?}");
         let opt_src_type_expected = Some(target_type.clone());
-        let e = ResourceProductionError::CouldntDowncastResource {
+        let rpe_cdr = ResourceProductionError_CouldntDowncastResource {
             src_ridfmt,
             src_resource_source,
             src_type,
             opt_src_type_expected,
             target_type,
         };
+        let e = ResourceProductionError::CouldntDowncastResource(Box::new(rpe_cdr));
         error!("resourceproducer_validatetoedo: {e:?}");
         Err(e)
     }

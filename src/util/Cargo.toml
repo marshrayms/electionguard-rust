@@ -6,7 +6,7 @@ repository = "https://github.com/microsoft/electionguard-rust"
 license = "Apache-2.0 OR MIT"
 publish = false
 
-[features]
+[features] #=============================================================================== features
 
 default = [
     "eg-forbid-unsafe-code",
@@ -15,11 +15,11 @@ default = [
 eg-allow-unsafe-code                    = [ ]
 eg-forbid-unsafe-code                   = [ ]
 
-[dependencies]
+[dependencies] #======================================================================= dependencies
 
-#--- Defined in this workspace
+#--------------- Defined in this workspace
 
-#--- From crates.io
+#--------------- From crates.io
 
 anyhow.workspace = true
 either.workspace = true
@@ -30,7 +30,7 @@ nutype.workspace = true
 static_assertions.workspace = true
 thiserror.workspace = true
 
-#--- Num-*, typenum, generic-array, hybrid-array
+#--------------- Num-*, typenum, generic-array, hybrid-array
 
 # generic-array.workspace = true
 # hybrid-array.workspace = true
@@ -39,29 +39,30 @@ num-integer.workspace = true
 num-traits.workspace = true
 typenum.workspace = true
 
-#--- Rand
+#--------------- Rand
 
 rand.workspace = true
 rand_core.workspace = true
 rand_distr.workspace = true
 rand_xorshift.workspace = true
 
-#--- RustCrypto
+#--------------- RustCrypto
 
 # crypto-common.workspace = true
+# crypto-bigint.workspace = true
 # digest.workspace = true
 # hmac.workspace = true
 # sha2.workspace = true
 sha3.workspace = true
 zeroize.workspace = true
 
-#--- Serde
+#--------------- Serde
 
 serde.workspace = true
 serde_json.workspace = true
 serde_with.workspace = true
 
-#--- Tracing
+#--------------- Tracing
 
 tracing.workspace = true
 #valuable.workspace = true

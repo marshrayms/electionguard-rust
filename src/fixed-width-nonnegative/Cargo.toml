@@ -1,0 +1,128 @@
+[package]
+name = "fixed-width-nonnegative"
+version = "0.1.0"
+edition = "2021"
+# default build = "build.rs"
+
+[features] #=============================================================================== features
+
+default = [
+    # "eg-forbid-unsafe-code",
+    "basic-array",
+    # "crypto-bigint",
+    # "hacl",
+    # "montgomery",
+    # "num-bigint",
+    "bits-256",
+    # "bits-4096",
+]
+
+# bits-8        = [ ] TODO temp commented out due to limitations of crate::significant_first::ops::add_returning_carry
+bits-16        = [ ]
+bits-24        = [ ]
+bits-32        = [ ]
+bits-48        = [ ]
+bits-64        = [ ]
+bits-96        = [ ]
+bits-128       = [ ]
+bits-192       = [ ]
+bits-256       = [ ]
+bits-3072      = [ ]
+bits-4096      = [ ]
+bits-8192      = [ ]
+
+eg-allow-unsafe-code                    = [ "util/eg-allow-unsafe-code" ]
+eg-forbid-unsafe-code                   = [ "util/eg-forbid-unsafe-code" ]
+
+basic-array      = []
+basic-array-u8   = []
+basic-array-u16  = []
+basic-array-u32  = []
+basic-array-u64  = []
+#basic-array-u128 = [] TODO temp commented out due to limitations of crate::significant_first::ops::add_returning_carry
+crypto-bigint      = [ "dep:crypto-bigint" ]
+hacl          = [ "dep:hacl" ]
+hacl-u32      = [ "dep:hacl" ]
+hacl-u64      = [ "dep:hacl" ]
+montgomery     = []
+# num-bigint (implicit)
+
+[dependencies] #======================================================================= dependencies
+
+#--------------- Defined in this workspace
+
+#util.workspace = true
+
+#--------------- From crates.io
+
+anyhow.workspace = true
+bytemuck.workspace = true
+base16ct.workspace = true
+cfg-if.workspace = true
+serde.workspace = true
+static_assertions.workspace = true
+strum.workspace = true
+
+#--------------- Num-*, typenum, generic-array, hybrid-array
+
+# generic-array.workspace = true
+# hybrid-array.workspace = true
+num-bigint = { workspace = true, optional = true, features = ["std"] }
+num-derive = { workspace = true, optional = true, features = [] }  #3 TODO go away?
+num-integer = { workspace = true, optional = true, features = ["std"] }
+num-traits.workspace = true
+# typenum.workspace = true
+
+#--------------- proc_macro2, quote, syn, paste
+
+paste.workspace = true
+
+#--------------- RustCrypto
+
+# crypto-common.workspace = true
+crypto-bigint = { workspace = true, optional = true }
+# digest.workspace = true
+# hmac.workspace = true
+# sha2.workspace = true
+# sha3.workspace = true
+zeroize.workspace = true
+
+#--------------- HACL*
+
+[dependencies.hacl]
+workspace = true
+optional = true
+
+[build-dependencies] #=========================================================== build-dependencies
+
+anyhow.workspace = true
+cfg-if.workspace = true
+cfg_aliases.workspace = true
+either.workspace = true
+inventory.workspace = true
+strum.workspace = true
+tracing.workspace = true
+
+#--------------- proc_macro2, quote, syn, paste
+
+prettyplease.workspace = true
+proc-macro2.workspace = true
+quote.workspace = true
+syn.workspace = true
+
+[dev-dependencies] #=============================================================== dev-dependencies
+
+#--------------- Defined in this workspace
+
+util.workspace = true
+
+#--------------- proc_macro2, quote, syn, paste
+
+syn.workspace = true
+
+[lints.rust] #=========================================================================== lints.rust
+
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(not_build_rs)'] }
+
+[badges] #=================================================================================== badges
+maintenance = { status = "experimental" }

@@ -191,20 +191,23 @@ mod t {
 
     #[test_log::test]
     fn t1() {
-        async_global_executor::block_on(t1_async());
-    }
+        async_global_executor::block_on(async {
+            let eg = Eg::new_with_test_data_generation_and_insecure_deterministic_csprng_seed(
+                "eg::extended_base_hash::t::t1",
+            );
+            let eg = eg.as_ref();
 
-    async fn t1_async() {
-        let eg = Eg::new_with_test_data_generation_and_insecure_deterministic_csprng_seed(
-            "eg::extended_base_hash::t::t1",
-        );
-        let eg = eg.as_ref();
+            let extended_base_hash = ExtendedBaseHash::compute(eg).await.unwrap();
 
-        let extended_base_hash = ExtendedBaseHash::compute(eg).await.unwrap();
+            // This hash value has not been computed externally and will need to be modified
+            // whenever the example data ElectionManifest changes.
+            assert_snapshot!(
+                extended_base_hash.h_e,
+                @"1AF7B7F385D43E12C9912DF16EB809A3E29225CA7EC771D6E7FA1133EA39D811");
 
-        // This hash value has not been computed externally and will need to be modified
-        // whenever the example data ElectionManifest changes.
-        assert_snapshot!(extended_base_hash.h_e,
-            @"1AF7B7F385D43E12C9912DF16EB809A3E29225CA7EC771D6E7FA1133EA39D811");
+            assert_snapshot!(
+                eg.h_p().await.unwrap(),
+                @"944286970EAFDB6F347F4EB93B30D48FA3EDCC89BFBAEA6F5AE8F29AFB05DDCE");
+        });
     }
 }

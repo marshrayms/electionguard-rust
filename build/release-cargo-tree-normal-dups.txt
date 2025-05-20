@@ -1,8 +1,8 @@
-cargo tree --offline --no-default-features --features  eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-forbid-reduced-params,eg-allow-unsafe-code -e normal -f "{p} {f}" --duplicates
+cargo tree --offline --no-default-features --features eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params,num-bigint,crypto-bigint -e normal -f "{p} {f}" --duplicates
 
 async-channel v1.9.0
 └── async-std v1.13.1 alloc,async-attributes,async-channel,async-global-executor,async-io,async-lock,attributes,crossbeam-utils,default,futures-channel,futures-core,futures-io,futures-lite,gloo-timers,kv-log-macro,log,memchr,once_cell,pin-project-lite,pin-utils,slab,std,wasm-bindgen-futures
-    └── ractor v0.15.5 async-std,async-trait
+    └── ractor v0.15.6 async-std,async-trait
         └── demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 
 async-channel v2.3.1 default,std
@@ -59,7 +59,7 @@ fnv v1.0.7 default,std
     ├── darling v0.20.11 default,suggestions
     │   ├── bon-macros v2.3.0 (proc-macro)
     │   │   └── bon v2.3.0 alloc,default,std
-    │   │       └── ractor v0.15.5 async-std,async-trait (*)
+    │   │       └── ractor v0.15.6 async-std,async-trait (*)
     │   └── serde_with_macros v3.12.0 (proc-macro)
     │       └── serde_with v3.12.0 alloc,default,macros,std
     │           ├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
@@ -92,12 +92,12 @@ generic-array v0.14.7 more_lengths
 └── crypto-common v0.1.6 rand_core,std
     └── digest v0.10.7 alloc,block-buffer,core-api,default,mac,rand_core,std,subtle (*)
 
-generic-array v1.2.0 const-default
+generic-array v1.2.0 const-default,zeroize
 └── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
 
 hashbrown v0.14.5 raw
 └── dashmap v6.1.0
-    └── ractor v0.15.5 async-std,async-trait (*)
+    └── ractor v0.15.6 async-std,async-trait (*)
 
 hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde
 ├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
@@ -122,15 +122,19 @@ rand_core v0.9.3 std
 ├── rand_xorshift v0.4.0
 │   ├── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
 │   └── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
+├── rand_xoshiro v0.7.0
+│   └── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
 ├── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
 ├── test-electionguard v0.1.0 (src/test-electionguard) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 └── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
 
 strum v0.26.3 default,derive,std,strum_macros
-└── ractor v0.15.5 async-std,async-trait (*)
+└── ractor v0.15.6 async-std,async-trait (*)
 
 strum v0.27.1 default,derive,std,strum_macros
-└── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
+├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
+└── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint
+    └── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
 
 strum_macros v0.26.4 (proc-macro)
 └── strum v0.26.3 default,derive,std,strum_macros (*)
@@ -148,10 +152,15 @@ syn v2.0.101 clone-impls,default,derive,extra-traits,full,parsing,printing,proc-
 │   ├── demo-eg v0.1.0 (src/demo-eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 │   ├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
 │   ├── eg-dataproducer-filesystem v0.1.0 (src/eg-resourceproducer-filesystem) eg-allow-unsafe-code
-│   └── ractor v0.15.5 async-std,async-trait (*)
+│   └── ractor v0.15.6 async-std,async-trait (*)
 ├── bon-macros v2.3.0 (proc-macro)  (*)
+├── bytemuck_derive v1.9.3 (proc-macro)
+│   └── bytemuck v1.23.0 bytemuck_derive,derive,min_const_generics
+│       ├── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
+│       └── hybrid-array v0.3.1 bytemuck,zeroize
+│           └── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
 ├── clap_derive v4.5.32 (proc-macro) default
-│   └── clap v4.5.37 color,default,derive,env,error-context,help,std,suggestions,usage
+│   └── clap v4.5.38 color,default,derive,env,error-context,help,std,suggestions,usage
 │       ├── electionguard v0.1.0 (src/electionguard) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 │       └── test-electionguard v0.1.0 (src/test-electionguard) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 ├── darling_core v0.20.11 strsim,suggestions (*)
@@ -162,7 +171,7 @@ syn v2.0.101 clone-impls,default,derive,extra-traits,full,parsing,printing,proc-
 ├── futures-macro v0.3.31 (proc-macro)
 │   └── futures-util v0.3.31 alloc,async-await,async-await-macro,channel,futures-channel,futures-io,futures-macro,futures-sink,io,memchr,sink,slab,std
 │       ├── futures v0.3.31 alloc,async-await,default,executor,futures-executor,std
-│       │   └── ractor v0.15.5 async-std,async-trait (*)
+│       │   └── ractor v0.15.6 async-std,async-trait (*)
 │       └── futures-executor v0.3.31 std
 │           └── futures v0.3.31 alloc,async-await,default,executor,futures-executor,std (*)
 ├── kinded_macros v0.3.0 (proc-macro)
@@ -194,21 +203,28 @@ syn v2.0.101 clone-impls,default,derive,extra-traits,full,parsing,printing,proc-
 │   │   │   └── eg-dataproducer-filesystem v0.1.0 (src/eg-resourceproducer-filesystem) eg-allow-unsafe-code
 │   │   ├── faster-hex v0.10.0 alloc,default,serde,std
 │   │   │   └── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
+│   │   ├── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
 │   │   ├── hashbrown v0.15.3 allocator-api2,equivalent,inline-more,raw-entry,serde (*)
 │   │   ├── num-bigint v0.4.6 default,serde,std
 │   │   │   ├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
+│   │   │   ├── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
 │   │   │   └── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
 │   │   ├── serde_json v1.0.140 default,indexmap,preserve_order,std (*)
 │   │   ├── serde_tokenstream v0.2.2
 │   │   │   ├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
 │   │   │   └── eg-dataproducer-filesystem v0.1.0 (src/eg-resourceproducer-filesystem) eg-allow-unsafe-code
 │   │   ├── serde_with v3.12.0 alloc,default,macros,std (*)
+│   │   ├── serdect v0.3.0
+│   │   │   └── crypto-bigint v0.6.1 serde,zeroize
+│   │   │       └── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
 │   │   ├── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
 │   │   └── zeroize v1.8.1 alloc,derive,serde,simd,std,zeroize_derive
+│   │       ├── crypto-bigint v0.6.1 serde,zeroize (*)
 │   │       ├── eg v0.1.0 (src/eg) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params (*)
 │   │       ├── electionguard v0.1.0 (src/electionguard) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
-│   │       ├── hybrid-array v0.3.1 zeroize
-│   │       │   └── test-data-generation v0.1.0 (src/test-data-generation) eg-allow-test-data-generation (*)
+│   │       ├── fixed-width-nonnegative v0.1.0 (src/fixed-width-nonnegative) bits-256,bits-4096,crypto-bigint,eg-allow-unsafe-code,montgomery,num-bigint (*)
+│   │       ├── generic-array v1.2.0 const-default,zeroize (*)
+│   │       ├── hybrid-array v0.3.1 bytemuck,zeroize (*)
 │   │       └── util v0.1.0 (src/util) eg-allow-unsafe-code (*)
 │   └── serde_with v3.12.0 alloc,default,macros,std (*)
 ├── serde_with_macros v3.12.0 (proc-macro)  (*)
@@ -227,7 +243,7 @@ syn v2.0.101 clone-impls,default,derive,extra-traits,full,parsing,printing,proc-
 │       ├── eg-dataproducer-filesystem v0.1.0 (src/eg-resourceproducer-filesystem) eg-allow-unsafe-code
 │       ├── polling v3.7.4
 │       │   └── async-io v2.4.0  (*)
-│       ├── ractor v0.15.5 async-std,async-trait (*)
+│       ├── ractor v0.15.6 async-std,async-trait (*)
 │       ├── test-electionguard v0.1.0 (src/test-electionguard) eg-allow-insecure-deterministic-csprng,eg-allow-nonstandard-egds-version,eg-allow-test-data-generation,eg-allow-unsafe-code,eg-forbid-reduced-params
 │       ├── tracing-futures v0.2.5 pin-project,std,std-future (*)
 │       └── util v0.1.0 (src/util) eg-allow-unsafe-code (*)

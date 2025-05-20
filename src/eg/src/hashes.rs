@@ -18,7 +18,7 @@ use crate::{
     election_parameters::ElectionParameters,
     errors::EgResult,
     fixed_parameters::{FixedParametersTrait, FixedParametersTraitExt},
-    hash::{HValue, eg_h},
+    hash::{HValue, SpecificHValue},
     resource::{
         ProduceResource, ProduceResourceExt, Resource, ResourceFormat, ResourceId, ResourceIdFormat,
     },
@@ -35,14 +35,26 @@ use crate::{
 
 //=================================================================================================|
 
+/// Unique tag type for `H_P`, the parameter base hash.
+///
+/// EGDS 2.1.0 sec. 3.1.2 eq. 4 pg. 16
+#[allow(non_camel_case_types)]
+pub struct ParameterBaseHash_tag;
+
+/// Unique type for `H_P`, the parameter base hash.
+///
+/// EGDS 2.1.0 sec.3.1.2 eq. 4 pg. 16
+#[allow(non_camel_case_types)]
+pub type ParameterBaseHash_H_P = SpecificHValue<ParameterBaseHash_tag>;
+
 //? TODO Validatable
 
 /// Parameter Base Hash
 ///
-/// EGDS 2.1.0 Section 3.1.2 pg. 16 eq. 4
+/// EGDS 2.1.0 sec.3.1.2 eq. 4 pg. 16
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ParameterBaseHash {
-    pub h_p: HValue,
+    pub h_p: ParameterBaseHash_H_P,
 }
 
 impl ParameterBaseHash {
@@ -59,7 +71,7 @@ impl ParameterBaseHash {
         ]
         .into();
 
-        let expected_len: usize = 1065; // EGDS 2.1.0 §3.1.2 pg. 74 eq. 4
+        let expected_len: usize = 1065; // EGDS 2.1.0 sec.3.1.2 eq. 4 pg. 16, 74.
 
         // v = 0x00 | b(p,512)| b(q,32) | b(g,512) | b(n,4) | b(k,4)
         let mut v = Vec::with_capacity(expected_len);
@@ -90,19 +102,33 @@ impl ParameterBaseHash {
 
         assert_eq!(v.len(), expected_len);
 
-        let h_p = eg_h(&h_v, &v);
+        let h_p = ParameterBaseHash_H_P::compute_from_eg_h(&h_v, &v);
 
         Self { h_p }
     }
 }
 
+//-------------------------------------------------------------------------------------------------|
+
+/// Unique tag type for `H_B`, the election base hash.
+///
+/// EGDS 2.1.0 sec. 3.1.4 eq. 4 pg. 19
+#[allow(non_camel_case_types)]
+pub struct ElectionBaseHash_tag;
+
+/// Unique type for `H_B`, the election base hash.
+///
+/// EGDS 2.1.0 sec. 3.1.4 eq. 4 pg. 19
+#[allow(non_camel_case_types)]
+pub type ElectionBaseHash_H_B = SpecificHValue<ElectionBaseHash_tag>;
+
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Hashes {
     /// Parameter base hash.
-    pub h_p: HValue,
+    pub h_p: ParameterBaseHash_H_P,
 
     /// Election base hash.
-    pub h_b: HValue,
+    pub h_b: ElectionBaseHash_H_B,
 }
 
 impl Hashes {
@@ -116,10 +142,10 @@ impl Hashes {
         let election_manifest = produce_resource.election_manifest().await?;
         let election_manifest = election_manifest.as_ref();
 
-        // Computation of the base parameter hash H_P.
+        // Computation of the base parameter hash H_P per EGDS 2.1.0 sec.3.1.2 eq. 4 pg. 16.
         let h_p = ParameterBaseHash::compute(election_parameters).h_p;
 
-        // Computation of the election base hash H_B.
+        // Computation of the election base hash H_B per EGDS 2.1.0 sec. 3.1.4 eq. 4 pg. 19.
         let h_b = {
             let mut v = vec![0x01];
 
@@ -137,19 +163,19 @@ impl Hashes {
 
             assert_eq!(v.len(), expected_len);
 
-            eg_h(&h_p, &v)
+            ElectionBaseHash_H_B::compute_from_eg_h(&h_p, &v)
         };
 
         Ok(Hashes { h_p, h_b })
     }
 
     /// Parameter base hash.
-    pub fn h_p(&self) -> &HValue {
+    pub fn h_p(&self) -> &ParameterBaseHash_H_P {
         &self.h_p
     }
 
     /// Election base hash.
-    pub fn h_b(&self) -> &HValue {
+    pub fn h_b(&self) -> &ElectionBaseHash_H_B {
         &self.h_b
     }
 }
@@ -249,9 +275,15 @@ mod t {
             assert_snapshot!(hashes.h_p,
                 @"944286970EAFDB6F347F4EB93B30D48FA3EDCC89BFBAEA6F5AE8F29AFB05DDCE");
 
+            assert_snapshot!(eg.h_p().await.unwrap(),
+                @"944286970EAFDB6F347F4EB93B30D48FA3EDCC89BFBAEA6F5AE8F29AFB05DDCE");
+
             // This hash value has not been computed externally and will need to be modified
             // whenever the example data ElectionManifest changes.
-            assert_snapshot!(hashes.h_b,
+            assert_snapshot!(hashes.h_b(),
+                @"D1AACAE2ABB43078D7903157D637B881618F3606387D6A9FD5CDF789E1DF5C4F");
+
+            assert_snapshot!(eg.h_b().await.unwrap(),
                 @"D1AACAE2ABB43078D7903157D637B881618F3606387D6A9FD5CDF789E1DF5C4F");
         });
     }

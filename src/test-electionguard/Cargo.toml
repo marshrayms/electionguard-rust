@@ -6,7 +6,8 @@ repository = "https://github.com/microsoft/electionguard-rust"
 license = "Apache-2.0 OR MIT"
 publish = false
 
-[features]
+[features] #=============================================================================== features
+
 default = [
     "eg-forbid-insecure-deterministic-csprng",
     "eg-forbid-nonstandard-egds-version",
@@ -37,26 +38,26 @@ eg-forbid-reduced-params                = [ "eg/eg-forbid-reduced-params" ]
 eg-allow-unsafe-code                    = [ "eg/eg-allow-unsafe-code",  "util/eg-allow-unsafe-code" ]
 eg-forbid-unsafe-code                   = [ "eg/eg-forbid-unsafe-code", "util/eg-forbid-unsafe-code" ]
 
-[dependencies]
+[dependencies] #======================================================================= dependencies
 
-#--- Defined in this workspace
+#--------------- Defined in this workspace
 
 eg.workspace = true
 util.workspace = true
 
-#--- From crates.io
+#--------------- From crates.io
 
 anyhow.workspace = true
 clap.workspace = true
 itertools.workspace = true
 static_assertions.workspace = true
 
-#--- Rand
+#--------------- Rand
 
 rand_core.workspace = true
 rand_distr.workspace = true
 
-#--- Futures
+#--------------- Futures
 
 futures-lite.workspace = true
 #futures-core.workspace = true
@@ -66,7 +67,7 @@ async-process.workspace = true
 async-global-executor.workspace = true
 async-io.workspace = true
 
-#--- Tracing
+#--------------- Tracing
 
 tracing.workspace = true
 tracing-subscriber = { workspace = true, features = [] } # "ansi"

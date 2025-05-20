@@ -284,15 +284,14 @@ pub enum ResourceProductionError {
     )]
     ResourceProducerExampleDataMismatch,
 
-    #[error("Could not downcast data resource `{0}` from `{src_resource_source}` of type `{src_type}` to type `{target_type}`. The expected source type (if known) was: {1}",
-        src_ridfmt.abbreviation(), opt_src_type_expected.clone().unwrap_or_else(|| "[Unknown]".to_string()))]
-    CouldntDowncastResource {
-        src_ridfmt: ResourceIdFormat,
-        src_resource_source: ResourceSource,
-        src_type: String,
-        opt_src_type_expected: Option<String>,
-        target_type: String,
-    },
+    #[error("Could not downcast data resource `{src}` from `{src_resource_source}` of type `{src_type}` to type `{target_type}`. The expected source type (if known) was: {src_type_expected}",
+        src = _0.src_ridfmt.abbreviation(),
+        src_type_expected = _0.opt_src_type_expected.clone().unwrap_or_else(|| "[Unknown]".to_string()),
+        src_resource_source = _0.src_resource_source,
+        src_type = _0.src_type,
+        target_type = _0.target_type,
+    )]
+    CouldntDowncastResource(Box<ResourceProductionError_CouldntDowncastResource>),
 
     #[error("The request was for {requested}, but {produced} was produced unexpectedly.")]
     UnexpectedResourceIdFormatProduced {
@@ -310,6 +309,19 @@ pub enum ResourceProductionError {
 
     #[error(transparent)]
     EgError(Box<EgError>),
+}
+
+/// To keep the total size of the [`ResourceProductionError`] enum down, we box the data
+/// for the [`CouldntDowncastResource`](ResourceProductionError::CouldntDowncastResource) variant.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(serde::Serialize)]
+#[allow(non_camel_case_types)]
+pub struct ResourceProductionError_CouldntDowncastResource {
+    pub src_ridfmt: ResourceIdFormat,
+    pub src_resource_source: ResourceSource,
+    pub src_type: String,
+    pub opt_src_type_expected: Option<String>,
+    pub target_type: String,
 }
 
 assert_impl_all!(ResourceProductionError: Send, Sync);
